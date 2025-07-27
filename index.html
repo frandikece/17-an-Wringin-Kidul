@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lomba 17-an 2025</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Rubik&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: url('https://png.pngtree.com/png-clipart/20220627/original/pngtree-cute-kitten-seamless-pattern-png-image_8287987.png') repeat center/200px auto, linear-gradient(to bottom, #fce4ec, #ffffff);
+      font-family: 'Rubik', sans-serif;
+    }
+    header {
+      position: relative;
+      background-color: #b71c1c;
+      color: white;
+      padding: 4rem 1rem;
+      text-align: center;
+      overflow: hidden;
+    }
+    header h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 3.2rem;
+      z-index: 2;
+      position: relative;
+    }
+    .ball {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.25;
+      animation: float 10s infinite ease-in-out;
+    }
+    @keyframes float {
+      0% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-50px) rotate(180deg); }
+      100% { transform: translateY(0) rotate(360deg); }
+    }
+    .ball { width: 50px; height: 50px; background: #ff5252; }
+    .ball:nth-child(1) { top: 10%; left: 5%; }
+    .ball:nth-child(2) { top: 20%; left: 15%; background: #ffc107; }
+    .ball:nth-child(3) { top: 30%; left: 80%; background: #4caf50; }
+    .ball:nth-child(4) { top: 40%; left: 25%; background: #2196f3; }
+    .ball:nth-child(5) { top: 50%; left: 60%; background: #9c27b0; }
+    .ball:nth-child(6) { top: 15%; left: 40%; background: #ff5722; }
+    .ball:nth-child(7) { top: 65%; left: 10%; background: #3f51b5; }
+    .ball:nth-child(8) { top: 70%; left: 30%; background: #009688; }
+    .ball:nth-child(9) { top: 35%; left: 70%; background: #cddc39; }
+    .ball:nth-child(10) { top: 25%; left: 85%; background: #795548; }
+    .ball:nth-child(11) { top: 45%; left: 50%; background: #e91e63; }
+    .ball:nth-child(12) { top: 5%; left: 75%; background: #607d8b; }
+
+    .btn-cta {
+      background-color: #ffffff;
+      color: #b71c1c;
+      border: 3px solid #b71c1c;
+      font-weight: bold;
+      border-radius: 50px;
+      padding: 0.6rem 1.5rem;
+      transition: 0.3s ease;
+      z-index: 2;
+      position: relative;
+    }
+    .btn-cta:hover {
+      background-color: #b71c1c;
+      color: white;
+    }
+    main h2 {
+      font-family: 'Fredoka One', cursive;
+      color: #bf360c;
+    }
+    .filter-buttons {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .filter-buttons .btn {
+      margin: 0.2rem;
+    }
+    .card {
+      border: none;
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+    .card-title {
+      font-weight: bold;
+      color: #d84315;
+    }
+    .badge-merah, .badge {
+      background-color: #ff7043 !important;
+    }
+    .footer {
+      background: linear-gradient(to right, #c62828, #b71c1c);
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      margin-top: 3rem;
+      font-size: 0.9rem;
+    }
+      @media (max-width: 768px) {
+      header h1 {
+        font-size: 2rem;
+      }
+      .btn-cta {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+      .filter-buttons .btn {
+        display: block;
+        width: 100%;
+        margin: 0.3rem 0;
+      }
+      .card-title {
+        font-size: 1.1rem;
+      }
+      .modal-content {
+        font-size: 0.9rem;
+      }
+      .table {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+<style>
+  .text-gold {
+    color: #ff9800;
+    font-weight: bold;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js">// Dummy data leaderboard
+const leaderboardData = [
+  { nama: 'Saya orang PALING KEREN SUPER DUPER SIGMA', menang: 5 },
+  { nama: 'Saya orang PALING KEREN', menang: 3 },
+  { nama: 'Saya ORANG KEREN', menang: 2 }
+];
+
+const leaderboardBody = document.getElementById('leaderboardBody');
+leaderboardData.forEach((p, i) => {
+  leaderboardBody.innerHTML += `
+    <tr>
+      <td><strong>${i + 1}</strong></td>
+      <td>${p.nama}</td>
+      <td>${p.menang}</td>
+    </tr>
+  `;
+});
+
+</script>
+<audio id="clapAudio" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_b8dd9f50a7.mp3?filename=short-applause-81839.mp3" preload="auto"></audio>
+</head>
+<body>
+  <header>
+    <div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div>
+    <h1>Ayo Meriahkan Lomba 17-an 2025!</h1>
+    <p class="lead">Cek jadwal, lokasi, dan jenis perlombaan di lingkungan kita.</p>
+    <a href="#lomba" class="btn btn-cta mt-3 shadow">Lihat Jadwal Lomba</a>
+  </header>
+
+  
+
+<main class="container py-5" id="lomba">
+    <h2 class="text-center mb-4">Daftar Perlombaan Seru</h2>
+    <div class="filter-buttons">
+      <button class="btn btn-outline-danger" onclick="filterKategori('Campuran Warga')">Campuran Warga</button>
+      <button class="btn btn-outline-danger" onclick="filterKategori('SD, SMP-SMA')">SD, SMP-SMA</button>
+      <button class="btn btn-outline-danger" onclick="filterKategori('PAUD - SD kelas 3')">PAUD - SD kelas 3</button>
+      <button class="btn btn-outline-danger" onclick="filterKategori('TK - SD kelas 3, SD kelas 4 - SMP')">TK - SD, SMP</button>
+      <button class="btn btn-outline-danger" onclick="filterKategori('Ibu-ibu')">Ibu-ibu</button>
+      <button class="btn btn-outline-secondary" onclick="filterKategori('all')">Tampilkan Semua</button>
+    </div>
+    <div class="row g-4" id="daftarLomba"></div>
+  <div id="pemenangModal" class="modal fade" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center bg-light border-warning border-4">
+      <div class="modal-header bg-warning text-white">
+        <h5 class="modal-title w-100" id="judulPemenang">🏆 Pemenang</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <h3 class="text-gold">🥇 Juara 1</h3>
+        <p id="juara1" class="fs-5 fw-bold"></p>
+        <h4>🥈 Juara 2</h4>
+        <p id="juara2"></p>
+        <h5>🥉 Juara 3</h5>
+        <p id="juara3"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+</main>
+
+<section class="container py-5" id="leaderboard">
+  <h2 class="text-center mb-4" style="color: gold; text-shadow: 1px 1px 3px #555">🏅 Leaderboard Pemenang Terbanyak</h2>
+  <div class="table-responsive">
+    <table class="table table-bordered text-center" style="border-color: gold">
+      <thead style="background-color: gold; color: #000">
+        <tr>
+          <th>Peringkat</th>
+          <th>Nama Peserta</th>
+          <th>Jumlah Menang</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboardBody">
+        <!-- Diisi dengan JS -->
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="container py-5" id="rundown">
+  <h2 class="text-center mb-4">🕯️ Rundown Acara Tirakatan</h2>
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered">
+      <thead class="table-danger text-center">
+        <tr>
+          <th>No</th>
+          <th>Acara</th>
+          <th>Jam</th>
+          <th>Penanggung Jawab</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Pembukaan dan Doa Bersama</td><td>19.30-19.50</td><td>MC</td></tr>
+        <tr><td>2</td><td>Indonesia Raya</td><td>19.50-20.00</td><td>Ririn</td></tr>
+        <tr><td>3</td><td>Pembacaan Teks Proklamasi (Pak Hasan)<br>Doa Potong Tumpeng (Nafisa dan Rafa)</td><td>20.00-20.05</td><td>Teks Proklamasi</td></tr>
+        <tr><td>4</td><td>Sambutan Siska</td><td>20.05-20.10</td><td>-</td></tr>
+        <tr><td>5</td><td>Sambutan Pak Dukuh<br>Pentas Seni (Wonderland)</td><td>20.10-20.30</td><td>-</td></tr>
+        <tr><td>6</td><td>Doorprize</td><td>20.30-20.40</td><td>Ema & Siska</td></tr>
+        <tr><td>7</td><td>Pembagian Hadiah Lomba Anak-anak</td><td>20.40-21.00</td><td>Siska dan Sari</td></tr>
+        <tr><td>8</td><td>Pentas Seni Tari (Dongklak)</td><td>21.00-21.10</td><td>Siska</td></tr>
+        <tr><td>9</td><td>Doorprize</td><td>21.10-21.20</td><td>Brian & Pius</td></tr>
+        <tr><td>10</td><td>Pembagian Hadiah Lomba Ibu-ibu</td><td>21.20-21.40</td><td>Siska & Ema</td></tr>
+        <tr><td>11</td><td>Doorprize</td><td>21.40-21.50</td><td>MC</td></tr>
+        <tr><td>12</td><td>Pentas Seni Tari (Kawit)</td><td>21.50-22.10</td><td>Siska</td></tr>
+        <tr><td>13</td><td>Pembagian SPP</td><td>22.10-22.20</td><td>Bpk-bpk</td></tr>
+        <tr><td>14</td><td>Penutupan dan Makan Bersama<br>Doa Makan (Pak Hasan)</td><td>22.20-selesai</td><td>MC</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer class="footer">
+    Website ini dibuat untuk membantu masyarakat mengetahui informasi lomba 17-an 2025.<br>
+    Hubungi panitia RT untuk info lebih lanjut. Semangat Merdeka! 🇮🇩
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const lombaData = [
+      { nama: "Volly Campuran", kategori: "Campuran Warga", lokasi: "Lapangan Voli", tanggal: "3 Agustus 2025", konsep: "4 Tim warga, sistem gugur, semifinal dan final, max 2 orang per KK" },
+      { nama: "Lari Kelereng", kategori: "SD, SMP-SMA", lokasi: "Lapangan Voli", tanggal: "3 Agustus 2025", konsep: "Sama seperti tahun sebelumnya" },
+      { nama: "Lari Bendera", kategori: "SD kelas 3", lokasi: "Lapangan Voli", tanggal: "3 Agustus 2025", konsep: "Sama seperti tahun sebelumnya" },
+      { nama: "Mewarnai", kategori: "PAUD - SD kelas 3", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Gambar dari Kak Siska" },
+      { nama: "CCA (Cerdas Cermat Agama)", kategori: "SD kelas 4 - SMA", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Wajib bersuara saat menjawab" },
+      { nama: "Memasukkan Pensil", kategori: "TK - SD kelas 3, SD kelas 4 - SMP", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya" },
+      { nama: "Pecah Air", kategori: "TK - SD kelas 3, SD kelas 4 - SMP", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya" },
+      { nama: "Balap Karung", kategori: "SD, SMP-SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya" },
+      { nama: "Estafet Sarung", kategori: "Ibu-ibu", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya" },
+      { nama: "Joget Balon", kategori: "Ibu-ibu", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya" },
+      { nama: "Estafet Tepung", kategori: "SD kelas 4 - SMA", lokasi: "Lapangan Voli", tanggal: "10 Agustus 2025", konsep: "Menggunakan kartu remi" },
+      { nama: "Estafet Air", kategori: "SD kelas 4 - SMA", lokasi: "Lapangan Voli", tanggal: "10 Agustus 2025", konsep: "Gelas plastik ditali di atas kepala" }
+    ];
+
+    const container = document.getElementById('daftarLomba');
+
+    function renderLomba(data) {
+      container.innerHTML = '';
+      data.forEach(lomba => {
+        container.innerHTML += `
+          <div class="col-md-6 col-lg-4">
+            <div class="card h-100 p-3 bg-white">
+  <div class="card-body">
+    <h5 class="card-title">${lomba.nama}</h5>
+    <span class="badge badge-merah mb-2">${lomba.kategori}</span>
+    <p><strong>📍 Lokasi:</strong> ${lomba.lokasi}</p>
+    <p><strong>📅 Tanggal:</strong> ${lomba.tanggal}</p>
+    <p><strong>📋 Konsep:</strong> ${lomba.konsep}</p>
+    <div class="d-flex justify-content-start mt-3">
+  <button class="btn btn-warning" onclick="showPemenang('${lomba.nama}')">🎉 Lihat Pemenang</button>
+</div>
+  </div>
+</div>
+</div>
+          </div>
+        `;
+      });
+    }
+
+    function filterKategori(kategori) {
+      if (kategori === 'all') {
+        renderLomba(lombaData);
+      } else {
+        const filtered = lombaData.filter(l => l.kategori === kategori);
+        renderLomba(filtered);
+      }
+    }
+
+    // Render awal semua lomba
+    renderLomba(lombaData);
+  function showPemenang(namaLomba) {
+  const modal = new bootstrap.Modal(document.getElementById('pemenangModal'));
+  document.getElementById('judulPemenang').innerText = `🏆 Pemenang ${namaLomba}`;
+
+  // Data dummy
+  document.getElementById('juara1').innerText = 'Saya orang PALING KEREN SUPER DUPER SIGMA';
+  document.getElementById('juara2').innerText = 'Saya orang PALING KEREN';
+  document.getElementById('juara3').innerText = 'Saya ORANG KEREN';
+
+  confetti({
+    particleCount: 200,
+    spread: 100,
+    origin: { y: 0.6 }
+  });
+  document.getElementById('clapAudio').play();
+  modal.show();
+}
+</script>
+</body>
+</html>
