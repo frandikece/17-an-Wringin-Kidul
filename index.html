@@ -405,18 +405,18 @@
   <script>
     // Data lomba (sekarang hanya data lokal, tanpa Firebase)
     let lombaData = [
-      { id: 'lomba1', nama: "Memasukkan Pensil", kategori: "TK - SD kelas 3, SD kelas 4 - SMP", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Budi', juara2: 'Santi', juara3: 'Agus'} },
-      { id: 'lomba2', nama: "Mewarnai", kategori: "PAUD - SD kelas 3", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Gambar dari Kak Siska", pemenang: {juara1: 'Citra', juara2: 'Dedi', juara3: 'Eka'} },
-      { id: 'lomba3', nama: "CCA (Cerdas Cermat Agama)", kategori: "SD kelas 4 - SMA", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Wajib bersuara saat menjawab", pemenang: {juara1: 'Fajar', juara2: 'Gita', juara3: 'Hadi'} },
-      { id: 'lomba4', nama: "Lari Kelereng", kategori: "SD, SMP-SMA", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Indra', juara2: 'Joko', juara3: 'Kartika'} },
-      { id: 'lomba5', nama: "Lari Bendera", kategori: "SD kelas 3", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Lina', juara2: 'Mira', juara3: 'Nia'} },
-      { id: 'lomba6', nama: "Joget Balon", kategori: "Ibu-ibu", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Bu Ani', juara2: 'Bu Beta', juara3: 'Bu Citra'} },
-      { id: 'lomba7', nama: "Estafet Sarung", kategori: "Ibu-ibu", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Bu Dewi', juara2: 'Bu Ela', juara3: 'Bu Fani'} },
-      { id: 'lomba8', nama: "Balap Karung", kategori: "SD, SMP-SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Gilang', juara2: 'Hasan', juara3: 'Irfan'} },
-      { id: 'lomba9', nama: "Pecah Air", kategori: "TK - SD kelas 3, SD kelas 4 - SMP", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Jihan', juara2: 'Kevin', juara3: 'Laras'} },
-      { id: 'lomba10', nama: "Estafet Tepung", kategori: "SD kelas 4 - SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Menggunakan kartu remi", pemenang: {juara1: 'Maya', juara2: 'Nanda', juara3: 'Oscar'} },
-      { id: 'lomba11', nama: "Estafet Air", kategori: "SD kelas 4 - SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Gelas plastik ditali di atas kepala", pemenang: {juara1: 'Putri', juara2: 'Rian', juara3: 'Sinta'} },
-      { id: 'lomba12', nama: "Volly Campuran", kategori: "Campuran Warga", lokasi: "Lapangan Voli", tanggal: "10 Agustus 2025", konsep: "4 Tim warga, sistem gugur, semifinal dan final, max 2 orang per KK", pemenang: {juara1: 'Tim A', juara2: 'Tim B', juara3: 'Tim C'} }
+      { id: 'lomba1', nama: "Memasukkan Pensil", kategori: "TK - SD kelas 3, SD kelas 4 - SMP", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: '?', juara2: '?', juara3: '?'} },
+      { id: 'lomba2', nama: "Mewarnai", kategori: "PAUD - SD kelas 3", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Gambar dari Kak Siska", pemenang: {juara1: '?', juara2: '?', juara3: '?'} },
+      { id: 'lomba3', nama: "CCA (Cerdas Cermat Agama)", kategori: "SD kelas 4 - SMA", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Wajib bersuara saat menjawab", pemenang: {juara1: '?', juara2: '?', juara3: '?'} },
+      { id: 'lomba4', nama: "Lari Kelereng", kategori: "SD, SMP-SMA", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: '?', juara2: '?', juara3: '?'} },
+      { id: 'lomba5', nama: "Lari Bendera", kategori: "SD kelas 3", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: '?', juara2: '?', juara3: '?'} },
+      { id: 'lomba6', nama: "Joget Balon", kategori: "Ibu-ibu", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: '?', juara2: '?', juara3: '?'} },
+      { id: 'lomba7', nama: "Estafet Sarung", kategori: "Ibu-ibu", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: '?', juara2: '?', juara3: '?'} },
+      { id: 'lomba8', nama: "Balap Karung", kategori: "SD, SMP-SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: '?', juara2: '?', juara3: '?'} },
+      { id: 'lomba9', nama: "Pecah Air", kategori: "TK - SD kelas 3, SD kelas 4 - SMP", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: '?', juara2: '?', juara3: '?'} },
+      { id: 'lomba10', nama: "Estafet Tepung", kategori: "SD kelas 4 - SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Menggunakan kartu remi", pemenang: {juara1: '?', juara2: '?', juara3: '?'} },
+      { id: 'lomba11', nama: "Estafet Air", kategori: "SD kelas 4 - SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Gelas plastik ditali di atas kepala", pemenang: {juara1: '?', juara2: '?', juara3: '?'} },
+      { id: 'lomba12', nama: "Volly Campuran", kategori: "Campuran Warga", lokasi: "Lapangan Voli", tanggal: "10 Agustus 2025", konsep: "4 Tim warga, sistem gugur, semifinal dan final, max 2 orang per KK", pemenang: {juara1: '?', juara2: '?', juara3: '?'} }
     ];
 
     const container = document.getElementById('daftarLomba');
@@ -516,13 +516,13 @@
       document.getElementById('judulPemenang').innerText = `🏆 Pemenang ${lomba ? lomba.nama : namaLomba}`;
 
       if (lomba && lomba.pemenang) {
-        document.getElementById('juara1').innerText = lomba.pemenang.juara1 || 'Belum ada';
-        document.getElementById('juara2').innerText = lomba.pemenang.juara2 || 'Belum ada';
-        document.getElementById('juara3').innerText = lomba.pemenang.juara3 || 'Belum ada';
+        document.getElementById('juara1').innerText = lomba.pemenang.juara1 || '?'; // Changed from 'Belum ada' to '?'
+        document.getElementById('juara2').innerText = lomba.pemenang.juara2 || '?'; // Changed from 'Belum ada' to '?'
+        document.getElementById('juara3').innerText = lomba.pemenang.juara3 || '?'; // Changed from 'Belum ada' to '?'
       } else {
-        document.getElementById('juara1').innerText = 'Belum ada';
-        document.getElementById('juara2').innerText = 'Belum ada';
-        document.getElementById('juara3').innerText = 'Belum ada';
+        document.getElementById('juara1').innerText = '?'; // Changed from 'Belum ada' to '?'
+        document.getElementById('juara2').innerText = '?'; // Changed from 'Belum ada' to '?'
+        document.getElementById('juara3').innerText = '?'; // Changed from 'Belum ada' to '?'
       }
 
       confetti({
@@ -543,7 +543,7 @@
 
         const winnerCounts = {};
         lombaData.forEach(lomba => {
-            if (lomba.pemenang && lomba.pemenang.juara1) {
+            if (lomba.pemenang && lomba.pemenang.juara1 && lomba.pemenang.juara1 !== '?') { // Added check for '?'
                 winnerCounts[lomba.pemenang.juara1] = (winnerCounts[lomba.pemenang.juara1] || 0) + 1;
             }
         });
@@ -714,9 +714,9 @@
       form.style.display = 'block';
       const lomba = lombaData[parseInt(index)];
       document.getElementById('editPemenangLombaIndex').value = index;
-      document.getElementById('editJuara1').value = lomba.pemenang ? lomba.pemenang.juara1 || '' : '';
-      document.getElementById('editJuara2').value = lomba.pemenang ? lomba.pemenang.juara2 || '' : '';
-      document.getElementById('editJuara3').value = lomba.pemenang ? lomba.pemenang.juara3 || '' : '';
+      document.getElementById('editJuara1').value = lomba.pemenang ? lomba.pemenang.juara1 || '?' : '?'; // Changed default to '?'
+      document.getElementById('editJuara2').value = lomba.pemenang ? lomba.pemenang.juara2 || '?' : '?'; // Changed default to '?'
+      document.getElementById('editJuara3').value = lomba.pemenang ? lomba.pemenang.juara3 || '?' : '?'; // Changed default to '?'
     }
 
     function savePemenangChanges() { // Tidak lagi async
