@@ -402,37 +402,10 @@
   <!-- Bootstrap Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Your custom script -->
-  <script type="module">
-    // Firebase SDK Imports
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, collection, getDocs, doc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-    // Global variables provided by Canvas environment
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-    console.log("App ID yang digunakan:", appId); // LOGGING APP ID
-
-    // Firebase configuration provided by the user
-    const firebaseConfig = {
-      apiKey: "AIzaSyDay2LcG9AVatBFR9oLR5zr5jQAz8UJTT4",
-      authDomain: "website-17-an-wringin-kidul.firebaseapp.com", // PASTIKAN INI BENAR
-      projectId: "website-17-an-wringin-kidul",
-      storageBucket: "website-17-an-wringin-kidul.firebasestorage.app",
-      messagingSenderId: "720251123371",
-      appId: "1:720251123371:web:49e07b31156ad2a66fe9ee",
-      measurementId: "G-JJRVH8879P"
-    };
-    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-    // Inisialisasi Firebase
-    let app;
-    let db;
-    let auth;
-    let userId;
-
-    // Data lomba (akan diisi dari Firestore, ini sebagai fallback/initial data)
+  <script>
+    // Data lomba (sekarang hanya data lokal, tanpa Firebase)
     let lombaData = [
-      { id: 'lomba1', nama: "Memasukkan Pensil", kategori: "TK - SD kelas 3, SD kelas 4 - SMP", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Budi', juara2: 'Santi', juara3: 'Agus'} },
+      { id: 'lomba1', nama: "Memasukkan Pensil", kategori: "TK - SD kelas 3, SD kelas 4 - SMP", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Budi', juara2: 'Santi', juara3: 'Agus'} },
       { id: 'lomba2', nama: "Mewarnai", kategori: "PAUD - SD kelas 3", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Gambar dari Kak Siska", pemenang: {juara1: 'Citra', juara2: 'Dedi', juara3: 'Eka'} },
       { id: 'lomba3', nama: "CCA (Cerdas Cermat Agama)", kategori: "SD kelas 4 - SMA", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Wajib bersuara saat menjawab", pemenang: {juara1: 'Fajar', juara2: 'Gita', juara3: 'Hadi'} },
       { id: 'lomba4', nama: "Lari Kelereng", kategori: "SD, SMP-SMA", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Indra', juara2: 'Joko', juara3: 'Kartika'} },
@@ -622,7 +595,7 @@
       adminLoginModal.show();
     }
 
-    async function performAdminLogin() {
+    function performAdminLogin() { // Tidak lagi async
       console.log("performAdminLogin dipanggil.");
       const username = document.getElementById('adminUsername').value;
       const password = document.getElementById('adminPassword').value;
@@ -687,7 +660,7 @@
       document.getElementById('editLombaKonsep').value = lomba.konsep;
     }
 
-    async function saveLombaChanges() {
+    function saveLombaChanges() { // Tidak lagi async
       console.log("saveLombaChanges dipanggil.");
       const index = parseInt(document.getElementById('editLombaIndex').value);
       if (isNaN(index) || index < 0 || index >= lombaData.length) {
@@ -707,15 +680,8 @@
       updatedLomba.dateObject = parseLombaDates([updatedLomba])[0].dateObject;
       lombaData[index] = updatedLomba;
 
-      try {
-          const { dateObject, ...lombaToSave } = updatedLomba;
-          await setDoc(doc(db, `artifacts/${appId}/public/data/lomba`, lombaToSave.id), lombaToSave);
-          alert("Perubahan lomba berhasil disimpan secara permanen!");
-          console.log("Perubahan lomba berhasil disimpan ke Firestore.");
-      } catch (error) {
-          console.error("Error saving lomba changes to Firestore:", error);
-          alert("Gagal menyimpan perubahan lomba ke database. Cek konsol untuk detail.");
-      }
+      alert("Perubahan lomba berhasil disimpan (sementara)."); // Pesan tanpa referensi Firebase
+      console.log("Perubahan lomba berhasil disimpan secara lokal.");
 
       renderLomba(currentFilteredData);
       populateAdminLombaSelect();
@@ -753,7 +719,7 @@
       document.getElementById('editJuara3').value = lomba.pemenang ? lomba.pemenang.juara3 || '' : '';
     }
 
-    async function savePemenangChanges() {
+    function savePemenangChanges() { // Tidak lagi async
       console.log("savePemenangChanges dipanggil.");
       const index = parseInt(document.getElementById('editPemenangLombaIndex').value);
       if (isNaN(index) || index < 0 || index >= lombaData.length) {
@@ -768,14 +734,8 @@
       lombaData[index].pemenang.juara2 = document.getElementById('editJuara2').value;
       lombaData[index].pemenang.juara3 = document.getElementById('editJuara3').value;
 
-      try {
-          await updateDoc(doc(db, `artifacts/${appId}/public/data/lomba`, lombaData[index].id), { pemenang: lombaData[index].pemenang });
-          alert("Perubahan pemenang berhasil disimpan secara permanen!");
-          console.log("Perubahan pemenang berhasil disimpan ke Firestore.");
-      } catch (error) {
-          console.error("Error saving pemenang changes to Firestore:", error);
-          alert("Gagal menyimpan perubahan pemenang ke database. Cek konsol untuk detail.");
-      }
+      alert("Perubahan pemenang berhasil disimpan (sementara)."); // Pesan tanpa referensi Firebase
+      console.log("Perubahan pemenang berhasil disimpan secara lokal.");
 
       const currentModalLombaName = document.getElementById('judulPemenang').innerText.replace('🏆 Pemenang ', '');
       if (currentModalLombaName === lombaData[index].nama) {
@@ -784,75 +744,23 @@
       populateLeaderboard();
     }
 
-    // Fungsi inisialisasi aplikasi utama
-    async function initApp() {
+    // Fungsi inisialisasi aplikasi utama (sekarang hanya memuat data lokal)
+    function initApp() { // Tidak lagi async
         console.log("initApp dimulai.");
-        try {
-            app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            auth = getAuth(app);
-            console.log("Firebase SDK berhasil diinisialisasi.");
+        // Data lomba sudah ada di variabel lombaData, tidak perlu diambil dari Firebase
+        lombaData = parseLombaDates(lombaData); // Pastikan data lokal juga diparse tanggalnya
+        console.log("Data lomba dimuat dari lokal. Jumlah lomba:", lombaData.length);
+        console.log("Isi lombaData dari lokal:", lombaData);
 
-            await signInAnonymously(auth);
-            console.log("Autentikasi anonim.");
-            
-            userId = auth.currentUser?.uid || crypto.randomUUID();
-            console.log("User ID Firebase:", userId);
-
-            const lombaCollectionRef = collection(db, `artifacts/${appId}/public/data/lomba`);
-            console.log("Mencoba mengambil data dari Firestore di jalur:", `artifacts/${appId}/public/data/lomba`);
-            const lombaSnapshot = await getDocs(lombaCollectionRef);
-
-            if (!lombaSnapshot.empty) {
-                lombaData = [];
-                lombaSnapshot.forEach(doc => {
-                    lombaData.push({ id: doc.id, ...doc.data() });
-                });
-                lombaData = parseLombaDates(lombaData);
-                console.log("Data lomba dimuat dari Firestore. Jumlah lomba:", lombaData.length);
-                console.log("Isi lombaData dari Firestore:", lombaData);
-            } else {
-                console.log("Firestore kosong, menggunakan data lokal dan mengunggahnya.");
-                lombaData = parseLombaDates(lombaData);
-                for (const lomba of lombaData) {
-                    const { dateObject, ...lombaToSave } = lomba;
-                    await setDoc(doc(db, `artifacts/${appId}/public/data/lomba`, lombaToSave.id), lombaToSave);
-                }
-                console.log("Data awal diunggah ke Firestore. Jumlah lomba:", lombaData.length);
-                console.log("Isi lombaData setelah unggah awal:", lombaData);
-            }
-
-            sortLomba('asc', lombaData);
-            populateLeaderboard();
-            console.log("initApp selesai dengan sukses.");
-
-        } catch (error) {
-            console.error("Error initializing Firebase or fetching data:", error);
-            lombaData = [
-              { id: 'lomba1', nama: "Memasukkan Pensil", kategori: "TK - SD kelas 3, SD kelas 4 - SMP", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Budi', juara2: 'Santi', juara3: 'Agus'} },
-              { id: 'lomba2', nama: "Mewarnai", kategori: "PAUD - SD kelas 3", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Gambar dari Kak Siska", pemenang: {juara1: 'Citra', juara2: 'Dedi', juara3: 'Eka'} },
-              { id: 'lomba3', nama: "CCA (Cerdas Cermat Agama)", kategori: "SD kelas 4 - SMA", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Wajib bersuara saat menjawab", pemenang: {juara1: 'Fajar', juara2: 'Gita', juara3: 'Hadi'} },
-              { id: 'lomba4', nama: "Lari Kelereng", kategori: "SD, SMP-SMA", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Indra', juara2: 'Joko', juara3: 'Kartika'} },
-              { id: 'lomba5', nama: "Lari Bendera", kategori: "SD kelas 3", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Lina', juara2: 'Mira', juara3: 'Nia'} },
-              { id: 'lomba6', nama: "Joget Balon", kategori: "Ibu-ibu", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Bu Ani', juara2: 'Bu Beta', juara3: 'Bu Citra'} },
-              { id: 'lomba7', nama: "Estafet Sarung", kategori: "Ibu-ibu", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Bu Dewi', juara2: 'Bu Ela', juara3: 'Bu Fani'} },
-              { id: 'lomba8', nama: "Balap Karung", kategori: "SD, SMP-SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Gilang', juara2: 'Hasan', juara3: 'Irfan'} },
-              { id: 'lomba9', nama: "Pecah Air", kategori: "TK - SD kelas 3, SD kelas 4 - SMP", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Jihan', juara2: 'Kevin', juara3: 'Laras'} },
-              { id: 'lomba10', nama: "Estafet Tepung", kategori: "SD kelas 4 - SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Menggunakan kartu remi", pemenang: {juara1: 'Maya', juara2: 'Nanda', juara3: 'Oscar'} },
-              { id: 'lomba11', nama: "Estafet Air", kategori: "SD kelas 4 - SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Gelas plastik ditali di atas kepala", pemenang: {juara1: 'Putri', juara2: 'Rian', juara3: 'Sinta'} },
-              { id: 'lomba12', nama: "Volly Campuran", kategori: "Campuran Warga", lokasi: "Lapangan Voli", tanggal: "10 Agustus 2025", konsep: "4 Tim warga, sistem gugur, semifinal dan final, max 2 orang per KK", pemenang: {juara1: 'Tim A', juara2: 'Tim B', juara3: 'Tim C'} }
-            ];
-            sortLomba('asc', lombaData);
-            populateLeaderboard();
-            alert("Terjadi kesalahan saat memuat data. Menggunakan data lokal. Pastikan konfigurasi Firebase sudah benar dan aturan Firestore mengizinkan baca/tulis. Juga pastikan Firebase Authentication diaktifkan.");
-            console.error("initApp gagal. Menggunakan data lokal.");
-        }
+        sortLomba('asc', lombaData);
+        populateLeaderboard();
+        console.log("initApp selesai dengan sukses.");
     }
 
-    // Panggil initApp saat halaman dimuat
-    window.onload = async () => {
-        // Panggil initApp untuk menginisialisasi Firebase dan memuat data
-        await initApp();
+    // Panggil initApp dan tambahkan event listener saat halaman dimuat
+    window.onload = () => { // Tidak lagi async
+        // Panggil initApp untuk menginisialisasi data lokal
+        initApp();
 
         // Tambahkan event listener untuk elemen statis setelah initApp selesai
         document.getElementById('adminLoginBtn').addEventListener('click', showAdminLoginModal);
