@@ -848,7 +848,66 @@
     }
 
     // Panggil initApp saat halaman dimuat
-    window.onload = initApp;
+    window.onload = async () => {
+        // Panggil initApp untuk menginisialisasi Firebase dan memuat data
+        await initApp();
+
+        // Tambahkan event listener untuk elemen statis setelah initApp selesai
+        document.getElementById('adminLoginBtn').addEventListener('click', showAdminLoginModal);
+        document.getElementById('sortOrder').addEventListener('change', (event) => sortLomba(event.target.value));
+
+        document.querySelectorAll('#filterButtons .btn').forEach(button => {
+            button.addEventListener('click', (event) => filterKategori(event.target.dataset.kategori));
+        });
+
+        // Event listener untuk tombol di modal admin
+        const performAdminLoginBtn = document.getElementById('performAdminLoginBtn');
+        if (performAdminLoginBtn) {
+            performAdminLoginBtn.addEventListener('click', performAdminLogin);
+        } else {
+            console.warn("Tombol 'performAdminLoginBtn' tidak ditemukan.");
+        }
+
+        const saveLombaChangesBtn = document.getElementById('saveLombaChangesBtn');
+        if (saveLombaChangesBtn) {
+            saveLombaChangesBtn.addEventListener('click', saveLombaChanges);
+        } else {
+            console.warn("Tombol 'saveLombaChangesBtn' tidak ditemukan.");
+        }
+
+        const savePemenangChangesBtn = document.getElementById('savePemenangChangesBtn');
+        if (savePemenangChangesBtn) {
+            savePemenangChangesBtn.addEventListener('click', savePemenangChanges);
+        } else {
+            console.warn("Tombol 'savePemenangChangesBtn' tidak ditemukan.");
+        }
+
+        // Event listener untuk dropdown di modal admin
+        const editLombaSelect = document.getElementById('editLombaSelect');
+        if (editLombaSelect) {
+            editLombaSelect.addEventListener('change', loadLombaForEdit);
+        } else {
+            console.warn("Dropdown 'editLombaSelect' tidak ditemukan.");
+        }
+
+        const editPemenangSelect = document.getElementById('editPemenangSelect');
+        if (editPemenangSelect) {
+            editPemenangSelect.addEventListener('change', loadPemenangForEdit);
+        } else {
+            console.warn("Dropdown 'editPemenangSelect' tidak ditemukan.");
+        }
+
+        // Audio loading check
+        const clapAudio = document.getElementById('clapAudio');
+        if (clapAudio) {
+            clapAudio.load();
+        }
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            console.log("Bootstrap Modal is available after window.onload.");
+        } else {
+            console.warn("Bootstrap Modal might NOT be fully loaded or available after window.onload.");
+        }
+    };
 
 </script>
 <audio id="clapAudio" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_b8dd9f50a7.mp3?filename=short-applause.mp3" preload="auto"></audio>
