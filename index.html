@@ -505,9 +505,12 @@
 
     // Fungsi untuk menampilkan modal pemenang
     function showPemenang(namaLomba) {
+      console.log("Mencari lomba:", namaLomba); // LOGGING: Nama lomba yang dicari
       const lomba = lombaData.find(l => l.nama === namaLomba);
+      console.log("Lomba ditemukan:", lomba); // LOGGING: Objek lomba yang ditemukan (atau undefined)
+
       const modal = new bootstrap.Modal(document.getElementById('pemenangModal'));
-      document.getElementById('judulPemenang').innerText = `🏆 Pemenang ${lomba ? lomba.nama : namaLomba}`; // Gunakan nama dari lombaData jika ada
+      document.getElementById('judulPemenang').innerText = `🏆 Pemenang ${lomba ? lomba.nama : namaLomba}`;
 
       if (lomba && lomba.pemenang) {
         document.getElementById('juara1').innerText = lomba.pemenang.juara1 || 'Belum ada';
@@ -766,7 +769,7 @@
                     lombaData.push({ id: doc.id, ...doc.data() });
                 });
                 lombaData = parseLombaDates(lombaData); // Parse tanggal setelah data dimuat
-                console.log("Data lomba dimuat dari Firestore.");
+                console.log("Data lomba dimuat dari Firestore. Jumlah lomba:", lombaData.length); // LOGGING: Jumlah lomba
             } else {
                 // Jika Firestore kosong, inisialisasi dengan data lokal dan unggah ke Firestore
                 console.log("Firestore kosong, menggunakan data lokal dan mengunggahnya.");
@@ -777,6 +780,7 @@
                     const { dateObject, ...lombaToSave } = lomba;
                     await setDoc(doc(db, `artifacts/${appId}/public/data/lomba`, lombaToSave.id), lombaToSave);
                 }
+                console.log("Data awal diunggah ke Firestore. Jumlah lomba:", lombaData.length); // LOGGING: Jumlah lomba
             }
 
             // Render awal semua lomba dengan pengurutan default (terlama ke terbaru)
@@ -786,7 +790,20 @@
         } catch (error) {
             console.error("Error initializing Firebase or fetching data:", error);
             // Fallback ke data lokal jika ada masalah Firebase
-            lombaData = parseLombaDates(lombaData);
+            lombaData = [
+              { id: 'lomba1', nama: "Memasukkan Pensil", kategori: "TK - SD kelas 3, SD kelas 4 - SMP", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Budi', juara2: 'Santi', juara3: 'Agus'} },
+              { id: 'lomba2', nama: "Mewarnai", kategori: "PAUD - SD kelas 3", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Gambar dari Kak Siska", pemenang: {juara1: 'Citra', juara2: 'Dedi', juara3: 'Eka'} },
+              { id: 'lomba3', nama: "CCA (Cerdas Cermat Agama)", kategori: "SD kelas 4 - SMA", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Wajib bersuara saat menjawab", pemenang: {juara1: 'Fajar', juara2: 'Gita', juara3: 'Hadi'} },
+              { id: 'lomba4', nama: "Lari Kelereng", kategori: "SD, SMP-SMA", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Indra', juara2: 'Joko', juara3: 'Kartika'} },
+              { id: 'lomba5', nama: "Lari Bendera", kategori: "SD kelas 3", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Lina', juara2: 'Mira', juara3: 'Nia'} },
+              { id: 'lomba6', nama: "Joget Balon", kategori: "Ibu-ibu", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Bu Ani', juara2: 'Bu Beta', juara3: 'Bu Citra'} },
+              { id: 'lomba7', nama: "Estafet Sarung", kategori: "Ibu-ibu", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Bu Dewi', juara2: 'Bu Ela', juara3: 'Bu Fani'} },
+              { id: 'lomba8', nama: "Balap Karung", kategori: "SD, SMP-SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Gilang', juara2: 'Hasan', juara3: 'Irfan'} },
+              { id: 'lomba9', nama: "Pecah Air", kategori: "TK - SD kelas 3, SD kelas 4 - SMP", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Jihan', juara2: 'Kevin', juara3: 'Laras'} },
+              { id: 'lomba10', nama: "Estafet Tepung", kategori: "SD kelas 4 - SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Menggunakan kartu remi", pemenang: {juara1: 'Maya', juara2: 'Nanda', juara3: 'Oscar'} },
+              { id: 'lomba11', nama: "Estafet Air", kategori: "SD kelas 4 - SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Gelas plastik ditali di atas kepala", pemenang: {juara1: 'Putri', juara2: 'Rian', juara3: 'Sinta'} },
+              { id: 'lomba12', nama: "Volly Campuran", kategori: "Campuran Warga", lokasi: "Lapangan Voli", tanggal: "10 Agustus 2025", konsep: "4 Tim warga, sistem gugur, semifinal dan final, max 2 orang per KK", pemenang: {juara1: 'Tim A', juara2: 'Tim B', juara3: 'Tim C'} }
+            ];
             sortLomba('asc', lombaData);
             populateLeaderboard();
             alert("Terjadi kesalahan saat memuat data. Menggunakan data lokal. Pastikan konfigurasi Firebase sudah benar dan aturan Firestore mengizinkan baca/tulis. Juga pastikan Firebase Authentication diaktifkan.");
