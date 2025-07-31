@@ -182,7 +182,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content text-center bg-light border-warning border-4">
       <div class="modal-header bg-warning text-white">
-        <h5 class="modal-title w-100" id="judulPemenang">� Pemenang</h5>
+        <h5 class="modal-title w-100" id="judulPemenang">🏆 Pemenang</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
@@ -441,13 +441,6 @@
       { id: 'lomba12', nama: "Volly Campuran", kategori: "Campuran Warga", lokasi: "Lapangan Voli", tanggal: "10 Agustus 2025", konsep: "4 Tim warga, sistem gugur, semifinal dan final, max 2 orang per KK", pemenang: {juara1: 'Tim A', juara2: 'Tim B', juara3: 'Tim C'} }
     ];
 
-    // Dummy data leaderboard (akan diisi dari Firestore atau dihitung dari lombaData)
-    const leaderboardData = [
-      { nama: 'Saya orang PALING KEREN SUPER DUPER SIGMA', menang: 5 },
-      { nama: 'Saya orang PALING KEREN', menang: 3 },
-      { nama: 'Saya ORANG KEREN', menang: 2 }
-    ];
-
     const container = document.getElementById('daftarLomba');
     let currentFilteredData = [...lombaData]; // Menyimpan data yang sedang difilter
 
@@ -668,8 +661,9 @@
       lombaData[index] = updatedLomba;
 
       try {
-          // Simpan ke Firestore
-          await setDoc(doc(db, `artifacts/${appId}/public/data/lomba`, updatedLomba.id), updatedLomba);
+          // Hapus dateObject sebelum menyimpan karena Date object tidak bisa langsung disimpan di Firestore
+          const { dateObject, ...lombaToSave } = updatedLomba;
+          await setDoc(doc(db, `artifacts/${appId}/public/data/lomba`, lombaToSave.id), lombaToSave);
           alert("Perubahan lomba berhasil disimpan secara permanen!");
       } catch (error) {
           console.error("Error saving lomba changes to Firestore:", error);
@@ -802,4 +796,3 @@
 <audio id="clapAudio" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_b8dd9f50a7.mp3?filename=short-applause.mp3" preload="auto"></audio>
 </body>
 </html>
-�
