@@ -407,10 +407,12 @@
 
     // Global variables provided by Canvas environment
     const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+    console.log("App ID yang digunakan:", appId); // LOGGING APP ID
+
     // Firebase configuration provided by the user
     const firebaseConfig = {
       apiKey: "AIzaSyDay2LcG9AVatBFR9oLR5zr5jQAz8UJTT4",
-      authDomain: "website-17-an-wringin-kidul.firebaseapp.com",
+      authDomain: "website-17-an-wringin-kidul.firebaseapp.com", // PASTIKAN INI BENAR
       projectId: "website-17-an-wringin-kidul",
       storageBucket: "website-17-an-wringin-kidul.firebasestorage.app",
       messagingSenderId: "720251123371",
@@ -742,7 +744,8 @@
             db = getFirestore(app);
             auth = getAuth(app);
 
-            // Autentikasi anonim atau dengan token awal jika ada
+            // PASTIKAN Firebase Authentication diaktifkan di konsol Firebase Anda!
+            // Metode login anonim atau dengan token awal
             if (initialAuthToken) {
                 await signInWithCustomToken(auth, initialAuthToken);
             } else {
@@ -751,6 +754,7 @@
 
             // Dapatkan userId setelah autentikasi
             userId = auth.currentUser?.uid || crypto.randomUUID();
+            console.log("User ID Firebase:", userId); // LOGGING USER ID
 
             // Coba ambil data lomba dari Firestore
             const lombaCollectionRef = collection(db, `artifacts/${appId}/public/data/lomba`);
@@ -785,7 +789,7 @@
             lombaData = parseLombaDates(lombaData);
             sortLomba('asc', lombaData);
             populateLeaderboard();
-            alert("Terjadi kesalahan saat memuat data. Menggunakan data lokal. Pastikan konfigurasi Firebase sudah benar dan aturan Firestore mengizinkan baca/tulis.");
+            alert("Terjadi kesalahan saat memuat data. Menggunakan data lokal. Pastikan konfigurasi Firebase sudah benar dan aturan Firestore mengizinkan baca/tulis. Juga pastikan Firebase Authentication diaktifkan.");
         }
     }
 
