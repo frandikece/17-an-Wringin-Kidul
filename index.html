@@ -150,7 +150,7 @@
 <body>
   <header>
     <div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div>
-    <button class="btn btn-light btn-sm admin-login-btn" onclick="showAdminLoginModal()">Login Admin</button>
+    <button class="btn btn-light btn-sm admin-login-btn" id="adminLoginBtn">Login Admin</button>
     <h1>Ayo Meriahkan Lomba 17-an 2025!</h1>
     <p class="lead">Cek jadwal, lokasi, dan jenis perlombaan di lingkungan kita.</p>
     <a href="#lomba" class="btn btn-cta mt-3 shadow">Lihat Jadwal Lomba</a>
@@ -162,20 +162,20 @@
       <div class="col-md-6 offset-md-3">
         <div class="input-group">
           <label class="input-group-text" for="sortOrder">Urutkan Tanggal:</label>
-          <select class="form-select" id="sortOrder" onchange="sortLomba(this.value)">
+          <select class="form-select" id="sortOrder">
             <option value="asc">Terlama ke Terbaru</option>
             <option value="desc">Terbaru ke Terlama</option>
           </select>
         </div>
       </div>
     </div>
-    <div class="filter-buttons">
-      <button class="btn btn-outline-danger" onclick="filterKategori('Campuran Warga')">Campuran Warga</button>
-      <button class="btn btn-outline-danger" onclick="filterKategori('SD, SMP-SMA')">SD, SMP-SMA</button>
-      <button class="btn btn-outline-danger" onclick="filterKategori('PAUD - SD kelas 3')">PAUD - SD kelas 3</button>
-      <button class="btn btn-outline-danger" onclick="filterKategori('TK - SD kelas 3, SD kelas 4 - SMP')">TK - SD, SMP</button>
-      <button class="btn btn-outline-danger" onclick="filterKategori('Ibu-ibu')">Ibu-ibu</button>
-      <button class="btn btn-outline-secondary" onclick="filterKategori('all')">Tampilkan Semua</button>
+    <div class="filter-buttons" id="filterButtons">
+      <button class="btn btn-outline-danger" data-kategori="Campuran Warga">Campuran Warga</button>
+      <button class="btn btn-outline-danger" data-kategori="SD, SMP-SMA">SD, SMP-SMA</button>
+      <button class="btn btn-outline-danger" data-kategori="PAUD - SD kelas 3">PAUD - SD kelas 3</button>
+      <button class="btn btn-outline-danger" data-kategori="TK - SD kelas 3, SD kelas 4 - SMP">TK - SD, SMP</button>
+      <button class="btn btn-outline-danger" data-kategori="Ibu-ibu">Ibu-ibu</button>
+      <button class="btn btn-outline-secondary" data-kategori="all">Tampilkan Semua</button>
     </div>
     <div class="row g-4" id="daftarLomba"></div>
   <div id="pemenangModal" class="modal fade" tabindex="-1">
@@ -327,7 +327,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-        <button type="button" class="btn btn-primary" onclick="performAdminLogin()">Login</button>
+        <button type="button" class="btn btn-primary" id="performAdminLoginBtn">Login</button>
       </div>
     </div>
   </div>
@@ -343,7 +343,7 @@
       </div>
       <div class="modal-body">
         <h4>Edit Lomba</h4>
-        <select class="form-select mb-3" id="editLombaSelect" onchange="loadLombaForEdit()">
+        <select class="form-select mb-3" id="editLombaSelect">
           <option value="">Pilih Lomba</option>
         </select>
         <div id="lombaEditForm" style="display: none;">
@@ -368,11 +368,11 @@
             <label for="editLombaKonsep" class="form-label">Konsep</label>
             <textarea class="form-control" id="editLombaKonsep" rows="3"></textarea>
           </div>
-          <button class="btn btn-success" onclick="saveLombaChanges()">Simpan Perubahan Lomba</button>
+          <button class="btn btn-success" id="saveLombaChangesBtn">Simpan Perubahan Lomba</button>
         </div>
 
         <h4 class="mt-4">Edit Pemenang Lomba</h4>
-        <select class="form-select mb-3" id="editPemenangSelect" onchange="loadPemenangForEdit()">
+        <select class="form-select mb-3" id="editPemenangSelect">
           <option value="">Pilih Lomba untuk Edit Pemenang</option>
         </select>
         <div id="pemenangEditForm" style="display: none;">
@@ -389,7 +389,7 @@
             <label for="editJuara3" class="form-label">Juara 3</label>
             <input type="text" class="form-control" id="editJuara3">
           </div>
-          <button class="btn btn-success" onclick="savePemenangChanges()">Simpan Perubahan Pemenang</button>
+          <button class="btn btn-success" id="savePemenangChangesBtn">Simpan Perubahan Pemenang</button>
         </div>
       </div>
       <div class="modal-footer">
@@ -400,7 +400,7 @@
 </div>
 
 
-  <script>
+  <script type="module">
     // Firebase SDK Imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -420,8 +420,7 @@
       appId: "1:720251123371:web:49e07b31156ad2a66fe9ee",
       measurementId: "G-JJRVH8879P"
     };
-    // initialAuthToken tidak lagi diperlukan karena kita menghapus type="module"
-    // const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
     // Inisialisasi Firebase
     let app;
@@ -459,7 +458,7 @@
 
     // Fungsi untuk merender daftar lomba
     function renderLomba(data) {
-      console.log("Memulai renderLomba. Jumlah data:", data.length); // LOGGING: Render dimulai
+      console.log("Memulai renderLomba. Jumlah data:", data.length);
       container.innerHTML = '';
       if (data.length === 0) {
           container.innerHTML = '<p class="text-center text-muted">Tidak ada lomba yang ditemukan.</p>';
@@ -467,6 +466,7 @@
           return;
       }
       data.forEach(lomba => {
+        // Menggunakan data-namaLomba untuk identifikasi tombol pemenang
         container.innerHTML += `
           <div class="col-md-6 col-lg-4">
             <div class="card h-100 p-3 bg-white">
@@ -477,19 +477,26 @@
                 <p><strong>📅 Tanggal:</strong> ${lomba.tanggal}</p>
                 <p><strong>📋 Konsep:</strong> ${lomba.konsep}</p>
                 <div class="d-flex justify-content-start mt-3">
-                  <button class="btn btn-warning" onclick="showPemenang('${lomba.nama}')">🎉 Lihat Pemenang</button>
+                  <button class="btn btn-warning show-pemenang-btn" data-lomba-name="${lomba.nama}">🎉 Lihat Pemenang</button>
                 </div>
               </div>
             </div>
           </div>
         `;
       });
-      console.log("Render lomba selesai."); // LOGGING: Render selesai
+      console.log("Render lomba selesai.");
+      // Setelah render, tambahkan event listener untuk tombol "Lihat Pemenang"
+      document.querySelectorAll('.show-pemenang-btn').forEach(button => {
+          button.addEventListener('click', (event) => {
+              const lombaName = event.target.dataset.lombaName;
+              showPemenang(lombaName);
+          });
+      });
     }
 
     // Fungsi untuk memfilter lomba berdasarkan kategori
     function filterKategori(kategori) {
-      console.log("Filter kategori dipanggil:", kategori); // LOGGING: Filter dipanggil
+      console.log("Filter kategori dipanggil:", kategori);
       if (kategori === 'all') {
         currentFilteredData = [...lombaData];
       } else {
@@ -502,7 +509,7 @@
 
     // Fungsi untuk mengurutkan lomba berdasarkan tanggal
     function sortLomba(order, dataToSort = currentFilteredData) {
-        console.log("Sort lomba dipanggil. Urutan:", order); // LOGGING: Sort dipanggil
+        console.log("Sort lomba dipanggil. Urutan:", order);
         if (order === 'asc') {
             dataToSort.sort((a, b) => a.dateObject - b.dateObject);
         } else { // desc
@@ -514,11 +521,10 @@
 
     // Fungsi untuk menampilkan modal pemenang
     function showPemenang(namaLomba) {
-      console.log("showPemenang dipanggil untuk lomba:", namaLomba); // LOGGING: Fungsi dipanggil
+      console.log("showPemenang dipanggil untuk lomba:", namaLomba);
       const lomba = lombaData.find(l => l.nama === namaLomba);
-      console.log("Lomba ditemukan:", lomba); // LOGGING: Objek lomba yang ditemukan (atau undefined)
+      console.log("Lomba ditemukan:", lomba);
 
-      // Periksa apakah Bootstrap Modal tersedia
       if (typeof bootstrap === 'undefined' || !bootstrap.Modal) {
           console.error("Error: Bootstrap Modal tidak ditemukan. Pastikan bootstrap.bundle.min.js dimuat dengan benar.");
           alert("Gagal menampilkan pemenang. Modul Bootstrap tidak dimuat dengan benar.");
@@ -526,7 +532,6 @@
       }
 
       const modalElement = document.getElementById('pemenangModal');
-      // Pastikan modalElement ada sebelum mencoba membuat instance Modal
       if (!modalElement) {
           console.error("Error: Elemen modal 'pemenangModal' tidak ditemukan di DOM.");
           alert("Gagal menampilkan pemenang. Elemen modal tidak ditemukan.");
@@ -552,27 +557,25 @@
       });
       document.getElementById('clapAudio').play();
       modal.show();
-      console.log("Modal pemenang seharusnya ditampilkan."); // LOGGING: Modal ditampilkan
+      console.log("Modal pemenang seharusnya ditampilkan.");
     }
 
     // Fungsi untuk mengisi leaderboard
     function populateLeaderboard() {
-        console.log("Memulai populateLeaderboard."); // LOGGING: Leaderboard dimulai
+        console.log("Memulai populateLeaderboard.");
         const leaderboardBody = document.getElementById('leaderboardBody');
-        leaderboardBody.innerHTML = ''; // Bersihkan dulu
+        leaderboardBody.innerHTML = '';
 
-        // Hitung kemenangan dari lombaData yang sudah ada pemenangnya
         const winnerCounts = {};
         lombaData.forEach(lomba => {
             if (lomba.pemenang && lomba.pemenang.juara1) {
-                winnerCounts[lomba.pemenang.juara1] = (winnerCounts[lomba.pemenang.juera1] || 0) + 1;
+                winnerCounts[lomba.pemenang.juara1] = (winnerCounts[lomba.pemenang.juara1] || 0) + 1;
             }
-            // Anda bisa menambahkan logika untuk juara 2 dan 3 jika ingin mereka juga berkontribusi pada leaderboard
         });
 
         const dynamicLeaderboardData = Object.keys(winnerCounts)
             .map(name => ({ nama: name, menang: winnerCounts[name] }))
-            .sort((a, b) => b.menang - a.menang); // Urutkan dari yang terbanyak menang
+            .sort((a, b) => b.menang - a.menang);
 
         if (dynamicLeaderboardData.length === 0) {
             leaderboardBody.innerHTML = '<tr><td colspan="3" class="text-muted">Belum ada data leaderboard.</td></tr>';
@@ -589,7 +592,7 @@
                 </tr>
             `;
         });
-        console.log("Populate leaderboard selesai."); // LOGGING: Leaderboard selesai
+        console.log("Populate leaderboard selesai.");
     }
 
     const clapAudio = document.getElementById('clapAudio');
@@ -597,7 +600,7 @@
         if (clapAudio) {
             clapAudio.load();
         }
-        console.log("window.onload untuk audio dan Bootstrap check."); // LOGGING: window.onload
+        console.log("window.onload untuk audio dan Bootstrap check.");
         if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
             console.log("Bootstrap Modal is available after window.onload.");
         } else {
@@ -606,10 +609,10 @@
     });
 
     // --- Fitur Admin Login dan Edit ---
-    let isAdminLoggedIn = false; // Flag status login admin
+    let isAdminLoggedIn = false;
 
     function showAdminLoginModal() {
-      console.log("showAdminLoginModal dipanggil."); // LOGGING: Admin login modal dipanggil
+      console.log("showAdminLoginModal dipanggil.");
       const adminLoginModal = new bootstrap.Modal(document.getElementById('adminLoginModal'));
       document.getElementById('adminUsername').value = '';
       document.getElementById('adminPassword').value = '';
@@ -618,12 +621,11 @@
     }
 
     async function performAdminLogin() {
-      console.log("performAdminLogin dipanggil."); // LOGGING: Admin login dilakukan
+      console.log("performAdminLogin dipanggil.");
       const username = document.getElementById('adminUsername').value;
       const password = document.getElementById('adminPassword').value;
       const loginMessage = document.getElementById('loginMessage');
 
-      // Kredensial login dummy (ganti dengan autentikasi yang aman di produksi)
       if (username === 'admin' && password === 'admin123') {
         isAdminLoggedIn = true;
         loginMessage.innerText = '';
@@ -638,7 +640,7 @@
     }
 
     function showAdminPanel() {
-      console.log("showAdminPanel dipanggil."); // LOGGING: Admin panel dipanggil
+      console.log("showAdminPanel dipanggil.");
       if (!isAdminLoggedIn) {
         showAdminLoginModal();
         return;
@@ -650,12 +652,12 @@
     }
 
     function populateAdminLombaSelect() {
-      console.log("populateAdminLombaSelect dipanggil."); // LOGGING: Populate lomba select dipanggil
+      console.log("populateAdminLombaSelect dipanggil.");
       const select = document.getElementById('editLombaSelect');
       select.innerHTML = '<option value="">Pilih Lomba</option>';
       lombaData.forEach((lomba, index) => {
         const option = document.createElement('option');
-        option.value = index; // Menggunakan indeks array untuk saat ini
+        option.value = index;
         option.innerText = lomba.nama;
         select.appendChild(option);
       });
@@ -663,7 +665,7 @@
     }
 
     function loadLombaForEdit() {
-      console.log("loadLombaForEdit dipanggil."); // LOGGING: Load lomba for edit dipanggil
+      console.log("loadLombaForEdit dipanggil.");
       const select = document.getElementById('editLombaSelect');
       const index = select.value;
       const form = document.getElementById('lombaEditForm');
@@ -684,7 +686,7 @@
     }
 
     async function saveLombaChanges() {
-      console.log("saveLombaChanges dipanggil."); // LOGGING: Save lomba changes dipanggil
+      console.log("saveLombaChanges dipanggil.");
       const index = parseInt(document.getElementById('editLombaIndex').value);
       if (isNaN(index) || index < 0 || index >= lombaData.length) {
         console.error("Indeks lomba tidak valid.");
@@ -692,7 +694,7 @@
       }
 
       const updatedLomba = {
-          ...lombaData[index], // Salin data yang ada
+          ...lombaData[index],
           nama: document.getElementById('editLombaNama').value,
           kategori: document.getElementById('editLombaKategori').value,
           lokasi: document.getElementById('editLombaLokasi').value,
@@ -700,14 +702,10 @@
           konsep: document.getElementById('editLombaKonsep').value
       };
 
-      // Perbarui dateObject setelah mengubah string tanggal
       updatedLomba.dateObject = parseLombaDates([updatedLomba])[0].dateObject;
-
-      // Update data lokal
       lombaData[index] = updatedLomba;
 
       try {
-          // Hapus dateObject sebelum menyimpan karena Date object tidak bisa langsung disimpan di Firestore
           const { dateObject, ...lombaToSave } = updatedLomba;
           await setDoc(doc(db, `artifacts/${appId}/public/data/lomba`, lombaToSave.id), lombaToSave);
           alert("Perubahan lomba berhasil disimpan secara permanen!");
@@ -717,17 +715,17 @@
           alert("Gagal menyimpan perubahan lomba ke database. Cek konsol untuk detail.");
       }
 
-      renderLomba(currentFilteredData); // Render ulang daftar yang ditampilkan
-      populateAdminLombaSelect(); // Perbarui dropdown pilihan lomba
+      renderLomba(currentFilteredData);
+      populateAdminLombaSelect();
     }
 
     function populateAdminPemenangSelect() {
-      console.log("populateAdminPemenangSelect dipanggil."); // LOGGING: Populate pemenang select dipanggil
+      console.log("populateAdminPemenangSelect dipanggil.");
       const select = document.getElementById('editPemenangSelect');
       select.innerHTML = '<option value="">Pilih Lomba untuk Edit Pemenang</option>';
       lombaData.forEach((lomba, index) => {
         const option = document.createElement('option');
-        option.value = index; // Menggunakan indeks array untuk saat ini
+        option.value = index;
         option.innerText = lomba.nama;
         select.appendChild(option);
       });
@@ -735,7 +733,7 @@
     }
 
     function loadPemenangForEdit() {
-      console.log("loadPemenangForEdit dipanggil."); // LOGGING: Load pemenang for edit dipanggil
+      console.log("loadPemenangForEdit dipanggil.");
       const select = document.getElementById('editPemenangSelect');
       const index = select.value;
       const form = document.getElementById('pemenangEditForm');
@@ -754,7 +752,7 @@
     }
 
     async function savePemenangChanges() {
-      console.log("savePemenangChanges dipanggil."); // LOGGING: Save pemenang changes dipanggil
+      console.log("savePemenangChanges dipanggil.");
       const index = parseInt(document.getElementById('editPemenangLombaIndex').value);
       if (isNaN(index) || index < 0 || index >= lombaData.length) {
         console.error("Indeks lomba tidak valid.");
@@ -762,14 +760,13 @@
       }
 
       if (!lombaData[index].pemenang) {
-          lombaData[index].pemenang = {}; // Inisialisasi jika belum ada
+          lombaData[index].pemenang = {};
       }
       lombaData[index].pemenang.juara1 = document.getElementById('editJuara1').value;
       lombaData[index].pemenang.juara2 = document.getElementById('editJuara2').value;
       lombaData[index].pemenang.juara3 = document.getElementById('editJuara3').value;
 
       try {
-          // Simpan pemenang ke Firestore
           await updateDoc(doc(db, `artifacts/${appId}/public/data/lomba`, lombaData[index].id), { pemenang: lombaData[index].pemenang });
           alert("Perubahan pemenang berhasil disimpan secara permanen!");
           console.log("Perubahan pemenang berhasil disimpan ke Firestore.");
@@ -778,69 +775,57 @@
           alert("Gagal menyimpan perubahan pemenang ke database. Cek konsol untuk detail.");
       }
 
-      // Perbarui tampilan modal pemenang jika sedang terbuka untuk lomba ini
       const currentModalLombaName = document.getElementById('judulPemenang').innerText.replace('🏆 Pemenang ', '');
       if (currentModalLombaName === lombaData[index].nama) {
-          showPemenang(lombaData[index].nama); // Panggil ulang untuk memperbarui tampilan
+          showPemenang(lombaData[index].nama);
       }
-      populateLeaderboard(); // Perbarui leaderboard setelah pemenang diubah
+      populateLeaderboard();
     }
 
     // Fungsi inisialisasi aplikasi utama
     async function initApp() {
-        console.log("initApp dimulai."); // LOGGING: initApp dimulai
+        console.log("initApp dimulai.");
         try {
             app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             auth = getAuth(app);
-            console.log("Firebase SDK berhasil diinisialisasi."); // LOGGING: SDK berhasil
+            console.log("Firebase SDK berhasil diinisialisasi.");
 
-            // PASTIKAN Firebase Authentication diaktifkan di konsol Firebase Anda!
-            // Metode login anonim atau dengan token awal
-            // initialAuthToken tidak lagi diperlukan karena kita menghapus type="module"
             await signInAnonymously(auth);
             console.log("Autentikasi anonim.");
             
-
-            // Dapatkan userId setelah autentikasi
             userId = auth.currentUser?.uid || crypto.randomUUID();
-            console.log("User ID Firebase:", userId); // LOGGING USER ID
+            console.log("User ID Firebase:", userId);
 
-            // Coba ambil data lomba dari Firestore
             const lombaCollectionRef = collection(db, `artifacts/${appId}/public/data/lomba`);
-            console.log("Mencoba mengambil data dari Firestore di jalur:", `artifacts/${appId}/public/data/lomba`); // LOGGING: Jalur Firestore
+            console.log("Mencoba mengambil data dari Firestore di jalur:", `artifacts/${appId}/public/data/lomba`);
             const lombaSnapshot = await getDocs(lombaCollectionRef);
 
             if (!lombaSnapshot.empty) {
-                lombaData = []; // Kosongkan data lokal jika ada data di Firestore
+                lombaData = [];
                 lombaSnapshot.forEach(doc => {
                     lombaData.push({ id: doc.id, ...doc.data() });
                 });
-                lombaData = parseLombaDates(lombaData); // Parse tanggal setelah data dimuat
-                console.log("Data lomba dimuat dari Firestore. Jumlah lomba:", lombaData.length); // LOGGING: Jumlah lomba
-                console.log("Isi lombaData dari Firestore:", lombaData); // LOGGING: Isi data
+                lombaData = parseLombaDates(lombaData);
+                console.log("Data lomba dimuat dari Firestore. Jumlah lomba:", lombaData.length);
+                console.log("Isi lombaData dari Firestore:", lombaData);
             } else {
-                // Jika Firestore kosong, inisialisasi dengan data lokal dan unggah ke Firestore
                 console.log("Firestore kosong, menggunakan data lokal dan mengunggahnya.");
-                lombaData = parseLombaDates(lombaData); // Pastikan data lokal juga diparse tanggalnya
+                lombaData = parseLombaDates(lombaData);
                 for (const lomba of lombaData) {
-                    // Pastikan id lomba unik untuk Firestore
-                    // Hapus dateObject sebelum menyimpan karena Date object tidak bisa langsung disimpan di Firestore
                     const { dateObject, ...lombaToSave } = lomba;
                     await setDoc(doc(db, `artifacts/${appId}/public/data/lomba`, lombaToSave.id), lombaToSave);
                 }
-                console.log("Data awal diunggah ke Firestore. Jumlah lomba:", lombaData.length); // LOGGING: Jumlah lomba
-                console.log("Isi lombaData setelah unggah awal:", lombaData); // LOGGING: Isi data
+                console.log("Data awal diunggah ke Firestore. Jumlah lomba:", lombaData.length);
+                console.log("Isi lombaData setelah unggah awal:", lombaData);
             }
 
-            // Render awal semua lomba dengan pengurutan default (terlama ke terbaru)
             sortLomba('asc', lombaData);
-            populateLeaderboard(); // Isi leaderboard
-            console.log("initApp selesai dengan sukses."); // LOGGING: initApp sukses
+            populateLeaderboard();
+            console.log("initApp selesai dengan sukses.");
 
         } catch (error) {
             console.error("Error initializing Firebase or fetching data:", error);
-            // Fallback ke data lokal jika ada masalah Firebase
             lombaData = [
               { id: 'lomba1', nama: "Memasukkan Pensil", kategori: "TK - SD kelas 3, SD kelas 4 - SMP", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Budi', juara2: 'Santi', juara3: 'Agus'} },
               { id: 'lomba2', nama: "Mewarnai", kategori: "PAUD - SD kelas 3", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Gambar dari Kak Siska", pemenang: {juara1: 'Citra', juara2: 'Dedi', juara3: 'Eka'} },
@@ -858,7 +843,7 @@
             sortLomba('asc', lombaData);
             populateLeaderboard();
             alert("Terjadi kesalahan saat memuat data. Menggunakan data lokal. Pastikan konfigurasi Firebase sudah benar dan aturan Firestore mengizinkan baca/tulis. Juga pastikan Firebase Authentication diaktifkan.");
-            console.error("initApp gagal. Menggunakan data lokal."); // LOGGING: initApp gagal
+            console.error("initApp gagal. Menggunakan data lokal.");
         }
     }
 
