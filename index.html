@@ -8,7 +8,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Rubik&display=swap" rel="stylesheet">
   <style>
     body {
-      /* Latar belakang sebelumnya menggunakan pola kucing, sekarang menggunakan gradien halus */
       background: linear-gradient(to bottom, #fce4ec, #ffffff);
       font-family: 'Rubik', sans-serif;
     }
@@ -183,7 +182,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content text-center bg-light border-warning border-4">
       <div class="modal-header bg-warning text-white">
-        <h5 class="modal-title w-100" id="judulPemenang">🏆 Pemenang</h5>
+        <h5 class="modal-title w-100" id="judulPemenang">� Pemenang</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
@@ -303,7 +302,7 @@
 
 <footer class="footer">
     Website ini dibuat untuk membantu masyarakat mengetahui informasi lomba 17-an 2025.<br>
-    Hubungi panitia RT untuk info lebih lanjut. Semangat Merdeka! �🇩
+    Hubungi panitia RT untuk info lebih lanjut. Semangat Merdeka! 🇮🇩
   </footer>
 
   <!-- Admin Login Modal -->
@@ -400,36 +399,74 @@
 </div>
 
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    // Data lomba (diperbarui untuk menyertakan pemenang dummy)
-    const lombaData = [
-      { nama: "Memasukkan Pensil", kategori: "TK - SD kelas 3, SD kelas 4 - SMP", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Budi', juara2: 'Santi', juara3: 'Agus'} },
-      { nama: "Mewarnai", kategori: "PAUD - SD kelas 3", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Gambar dari Kak Siska", pemenang: {juara1: 'Citra', juara2: 'Dedi', juara3: 'Eka'} },
-      { nama: "CCA (Cerdas Cermat Agama)", kategori: "SD kelas 4 - SMA", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Wajib bersuara saat menjawab", pemenang: {juara1: 'Fajar', juara2: 'Gita', juara3: 'Hadi'} },
-      { nama: "Lari Kelereng", kategori: "SD, SMP-SMA", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Indra', juara2: 'Joko', juara3: 'Kartika'} },
-      { nama: "Lari Bendera", kategori: "SD kelas 3", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Lina', juara2: 'Mira', juara3: 'Nia'} },
-      { nama: "Joget Balon", kategori: "Ibu-ibu", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Bu Ani', juara2: 'Bu Beta', juara3: 'Bu Citra'} },
-      { nama: "Estafet Sarung", kategori: "Ibu-ibu", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Bu Dewi', juara2: 'Bu Ela', juara3: 'Bu Fani'} },
-      { nama: "Balap Karung", kategori: "SD, SMP-SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Gilang', juara2: 'Hasan', juara3: 'Irfan'} },
-      { nama: "Pecah Air", kategori: "TK - SD kelas 3, SD kelas 4 - SMP", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Jihan', juara2: 'Kevin', juara3: 'Laras'} },
-      { nama: "Estafet Tepung", kategori: "SD kelas 4 - SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Menggunakan kartu remi", pemenang: {juara1: 'Maya', juara2: 'Nanda', juara3: 'Oscar'} },
-      { nama: "Estafet Air", kategori: "SD kelas 4 - SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Gelas plastik ditali di atas kepala", pemenang: {juara1: 'Putri', juara2: 'Rian', juara3: 'Sinta'} },
-      { nama: "Volly Campuran", kategori: "Campuran Warga", lokasi: "Lapangan Voli", tanggal: "10 Agustus 2025", konsep: "4 Tim warga, sistem gugur, semifinal dan final, max 2 orang per KK", pemenang: {juara1: 'Tim A', juara2: 'Tim B', juara3: 'Tim C'} }
+  <script type="module">
+    // Firebase SDK Imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, getDocs, doc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // Global variables provided by Canvas environment
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+    // Firebase configuration provided by the user
+    const firebaseConfig = {
+      apiKey: "AIzaSyDay2LcG9AVatBFR9oLR5zr5jQAz8UJTT4",
+      authDomain: "website-17-an-wringin-kidul.firebaseapp.com",
+      projectId: "website-17-an-wringin-kidul",
+      storageBucket: "website-17-an-wringin-kidul.firebasestorage.app",
+      messagingSenderId: "720251123371",
+      appId: "1:720251123371:web:49e07b31156ad2a66fe9ee",
+      measurementId: "G-JJRVH8879P"
+    };
+    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+    // Inisialisasi Firebase
+    let app;
+    let db;
+    let auth;
+    let userId;
+
+    // Data lomba (akan diisi dari Firestore, ini sebagai fallback/initial data)
+    let lombaData = [
+      { id: 'lomba1', nama: "Memasukkan Pensil", kategori: "TK - SD kelas 3, SD kelas 4 - SMP", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Budi', juara2: 'Santi', juara3: 'Agus'} },
+      { id: 'lomba2', nama: "Mewarnai", kategori: "PAUD - SD kelas 3", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Gambar dari Kak Siska", pemenang: {juara1: 'Citra', juara2: 'Dedi', juara3: 'Eka'} },
+      { id: 'lomba3', nama: "CCA (Cerdas Cermat Agama)", kategori: "SD kelas 4 - SMA", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Wajib bersuara saat menjawab", pemenang: {juara1: 'Fajar', juara2: 'Gita', juara3: 'Hadi'} },
+      { id: 'lomba4', nama: "Lari Kelereng", kategori: "SD, SMP-SMA", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Indra', juara2: 'Joko', juara3: 'Kartika'} },
+      { id: 'lomba5', nama: "Lari Bendera", kategori: "SD kelas 3", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Lina', juara2: 'Mira', juara3: 'Nia'} },
+      { id: 'lomba6', nama: "Joget Balon", kategori: "Ibu-ibu", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Bu Ani', juara2: 'Bu Beta', juara3: 'Bu Citra'} },
+      { id: 'lomba7', nama: "Estafet Sarung", kategori: "Ibu-ibu", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Bu Dewi', juara2: 'Bu Ela', juara3: 'Bu Fani'} },
+      { id: 'lomba8', nama: "Balap Karung", kategori: "SD, SMP-SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Gilang', juara2: 'Hasan', juara3: 'Irfan'} },
+      { id: 'lomba9', nama: "Pecah Air", kategori: "TK - SD kelas 3, SD kelas 4 - SMP", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Jihan', juara2: 'Kevin', juara3: 'Laras'} },
+      { id: 'lomba10', nama: "Estafet Tepung", kategori: "SD kelas 4 - SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Menggunakan kartu remi", pemenang: {juara1: 'Maya', juara2: 'Nanda', juara3: 'Oscar'} },
+      { id: 'lomba11', nama: "Estafet Air", kategori: "SD kelas 4 - SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Gelas plastik ditali di atas kepala", pemenang: {juara1: 'Putri', juara2: 'Rian', juara3: 'Sinta'} },
+      { id: 'lomba12', nama: "Volly Campuran", kategori: "Campuran Warga", lokasi: "Lapangan Voli", tanggal: "10 Agustus 2025", konsep: "4 Tim warga, sistem gugur, semifinal dan final, max 2 orang per KK", pemenang: {juara1: 'Tim A', juara2: 'Tim B', juara3: 'Tim C'} }
     ];
 
-    // Mengonversi string tanggal menjadi objek Date untuk mempermudah pengurutan
-    lombaData.forEach(lomba => {
-        // Mengganti "Agustus" dengan "August" agar Date() bisa mengurai dengan benar
-        const dateString = lomba.tanggal.replace('Agustus', 'August');
-        lomba.dateObject = new Date(dateString);
-    });
+    // Dummy data leaderboard (akan diisi dari Firestore atau dihitung dari lombaData)
+    const leaderboardData = [
+      { nama: 'Saya orang PALING KEREN SUPER DUPER SIGMA', menang: 5 },
+      { nama: 'Saya orang PALING KEREN', menang: 3 },
+      { nama: 'Saya ORANG KEREN', menang: 2 }
+    ];
 
     const container = document.getElementById('daftarLomba');
     let currentFilteredData = [...lombaData]; // Menyimpan data yang sedang difilter
 
+    // Fungsi untuk mengonversi string tanggal menjadi objek Date untuk mempermudah pengurutan
+    function parseLombaDates(data) {
+        data.forEach(lomba => {
+            const dateString = lomba.tanggal.replace('Agustus', 'August');
+            lomba.dateObject = new Date(dateString);
+        });
+        return data;
+    }
+
+    // Fungsi untuk merender daftar lomba
     function renderLomba(data) {
       container.innerHTML = '';
+      if (data.length === 0) {
+          container.innerHTML = '<p class="text-center text-muted">Tidak ada lomba yang ditemukan.</p>';
+          return;
+      }
       data.forEach(lomba => {
         container.innerHTML += `
           <div class="col-md-6 col-lg-4">
@@ -450,17 +487,18 @@
       });
     }
 
+    // Fungsi untuk memfilter lomba berdasarkan kategori
     function filterKategori(kategori) {
       if (kategori === 'all') {
         currentFilteredData = [...lombaData];
       } else {
         currentFilteredData = lombaData.filter(l => l.kategori === kategori);
       }
-      // Setelah filter, terapkan pengurutan yang sedang aktif
       const currentSortOrder = document.getElementById('sortOrder').value;
       sortLomba(currentSortOrder, currentFilteredData);
     }
 
+    // Fungsi untuk mengurutkan lomba berdasarkan tanggal
     function sortLomba(order, dataToSort = currentFilteredData) {
         if (order === 'asc') {
             dataToSort.sort((a, b) => a.dateObject - b.dateObject);
@@ -470,14 +508,11 @@
         renderLomba(dataToSort);
     }
 
-    // Render awal semua lomba dengan pengurutan default (terlama ke terbaru)
-    sortLomba('asc', lombaData);
-
     // Fungsi untuk menampilkan modal pemenang
     function showPemenang(namaLomba) {
       const lomba = lombaData.find(l => l.nama === namaLomba);
       const modal = new bootstrap.Modal(document.getElementById('pemenangModal'));
-      document.getElementById('judulPemenang').innerText = `🏆 Pemenang ${namaLomba}`;
+      document.getElementById('judulPemenang').innerText = `🏆 Pemenang ${lomba ? lomba.nama : namaLomba}`; // Gunakan nama dari lombaData jika ada
 
       if (lomba && lomba.pemenang) {
         document.getElementById('juara1').innerText = lomba.pemenang.juara1 || 'Belum ada';
@@ -498,26 +533,41 @@
       modal.show();
     }
 
-    // Dummy data leaderboard
-    const leaderboardData = [
-      { nama: 'Saya orang PALING KEREN SUPER DUPER SIGMA', menang: 5 },
-      { nama: 'Saya orang PALING KEREN', menang: 3 },
-      { nama: 'Saya ORANG KEREN', menang: 2 }
-    ];
+    // Fungsi untuk mengisi leaderboard
+    function populateLeaderboard() {
+        const leaderboardBody = document.getElementById('leaderboardBody');
+        leaderboardBody.innerHTML = ''; // Bersihkan dulu
 
-    const leaderboardBody = document.getElementById('leaderboardBody');
-    leaderboardData.forEach((p, i) => {
-      leaderboardBody.innerHTML += `
-        <tr>
-          <td><strong>${i + 1}</strong></td>
-          <td>${p.nama}</td>
-          <td>${p.menang}</td>
-        </tr>
-      `;
-    });
+        // Hitung kemenangan dari lombaData yang sudah ada pemenangnya
+        const winnerCounts = {};
+        lombaData.forEach(lomba => {
+            if (lomba.pemenang && lomba.pemenang.juara1) {
+                winnerCounts[lomba.pemenang.juara1] = (winnerCounts[lomba.pemenang.juara1] || 0) + 1;
+            }
+            // Anda bisa menambahkan logika untuk juara 2 dan 3 jika ingin mereka juga berkontribusi pada leaderboard
+        });
+
+        const dynamicLeaderboardData = Object.keys(winnerCounts)
+            .map(name => ({ nama: name, menang: winnerCounts[name] }))
+            .sort((a, b) => b.menang - a.menang); // Urutkan dari yang terbanyak menang
+
+        if (dynamicLeaderboardData.length === 0) {
+            leaderboardBody.innerHTML = '<tr><td colspan="3" class="text-muted">Belum ada data leaderboard.</td></tr>';
+            return;
+        }
+
+        dynamicLeaderboardData.forEach((p, i) => {
+            leaderboardBody.innerHTML += `
+                <tr>
+                    <td><strong>${i + 1}</strong></td>
+                    <td>${p.nama}</td>
+                    <td>${p.menang}</td>
+                </tr>
+            `;
+        });
+    }
 
     const clapAudio = document.getElementById('clapAudio');
-    // Memuat audio setelah halaman dimuat untuk menghindari masalah autoplay
     window.addEventListener('load', () => {
         if (clapAudio) {
             clapAudio.load();
@@ -535,7 +585,7 @@
       adminLoginModal.show();
     }
 
-    function performAdminLogin() {
+    async function performAdminLogin() {
       const username = document.getElementById('adminUsername').value;
       const password = document.getElementById('adminPassword').value;
       const loginMessage = document.getElementById('loginMessage');
@@ -568,7 +618,7 @@
       select.innerHTML = '<option value="">Pilih Lomba</option>';
       lombaData.forEach((lomba, index) => {
         const option = document.createElement('option');
-        option.value = index;
+        option.value = index; // Menggunakan indeks array untuk saat ini
         option.innerText = lomba.nama;
         select.appendChild(option);
       });
@@ -595,26 +645,39 @@
       document.getElementById('editLombaKonsep').value = lomba.konsep;
     }
 
-    function saveLombaChanges() {
+    async function saveLombaChanges() {
       const index = parseInt(document.getElementById('editLombaIndex').value);
       if (isNaN(index) || index < 0 || index >= lombaData.length) {
         console.error("Indeks lomba tidak valid.");
         return;
       }
 
-      lombaData[index].nama = document.getElementById('editLombaNama').value;
-      lombaData[index].kategori = document.getElementById('editLombaKategori').value;
-      lombaData[index].lokasi = document.getElementById('editLombaLokasi').value;
-      lombaData[index].tanggal = document.getElementById('editLombaTanggal').value;
-      lombaData[index].konsep = document.getElementById('editLombaKonsep').value;
+      const updatedLomba = {
+          ...lombaData[index], // Salin data yang ada
+          nama: document.getElementById('editLombaNama').value,
+          kategori: document.getElementById('editLombaKategori').value,
+          lokasi: document.getElementById('editLombaLokasi').value,
+          tanggal: document.getElementById('editLombaTanggal').value,
+          konsep: document.getElementById('editLombaKonsep').value
+      };
 
       // Perbarui dateObject setelah mengubah string tanggal
-      const dateString = lombaData[index].tanggal.replace('Agustus', 'August');
-      lombaData[index].dateObject = new Date(dateString);
+      updatedLomba.dateObject = parseLombaDates([updatedLomba])[0].dateObject;
+
+      // Update data lokal
+      lombaData[index] = updatedLomba;
+
+      try {
+          // Simpan ke Firestore
+          await setDoc(doc(db, `artifacts/${appId}/public/data/lomba`, updatedLomba.id), updatedLomba);
+          alert("Perubahan lomba berhasil disimpan secara permanen!");
+      } catch (error) {
+          console.error("Error saving lomba changes to Firestore:", error);
+          alert("Gagal menyimpan perubahan lomba ke database. Cek konsol untuk detail.");
+      }
 
       renderLomba(currentFilteredData); // Render ulang daftar yang ditampilkan
       populateAdminLombaSelect(); // Perbarui dropdown pilihan lomba
-      alert("Perubahan lomba berhasil disimpan (sementara). Untuk penyimpanan permanen, diperlukan database.");
     }
 
     function populateAdminPemenangSelect() {
@@ -622,7 +685,7 @@
       select.innerHTML = '<option value="">Pilih Lomba untuk Edit Pemenang</option>';
       lombaData.forEach((lomba, index) => {
         const option = document.createElement('option');
-        option.value = index;
+        option.value = index; // Menggunakan indeks array untuk saat ini
         option.innerText = lomba.nama;
         select.appendChild(option);
       });
@@ -647,7 +710,7 @@
       document.getElementById('editJuara3').value = lomba.pemenang ? lomba.pemenang.juara3 || '' : '';
     }
 
-    function savePemenangChanges() {
+    async function savePemenangChanges() {
       const index = parseInt(document.getElementById('editPemenangLombaIndex').value);
       if (isNaN(index) || index < 0 || index >= lombaData.length) {
         console.error("Indeks lomba tidak valid.");
@@ -661,13 +724,79 @@
       lombaData[index].pemenang.juara2 = document.getElementById('editJuara2').value;
       lombaData[index].pemenang.juara3 = document.getElementById('editJuara3').value;
 
+      try {
+          // Simpan pemenang ke Firestore
+          await updateDoc(doc(db, `artifacts/${appId}/public/data/lomba`, lombaData[index].id), { pemenang: lombaData[index].pemenang });
+          alert("Perubahan pemenang berhasil disimpan secara permanen!");
+      } catch (error) {
+          console.error("Error saving pemenang changes to Firestore:", error);
+          alert("Gagal menyimpan perubahan pemenang ke database. Cek konsol untuk detail.");
+      }
+
       // Perbarui tampilan modal pemenang jika sedang terbuka untuk lomba ini
       const currentModalLombaName = document.getElementById('judulPemenang').innerText.replace('🏆 Pemenang ', '');
       if (currentModalLombaName === lombaData[index].nama) {
           showPemenang(lombaData[index].nama); // Panggil ulang untuk memperbarui tampilan
       }
-      alert("Perubahan pemenang berhasil disimpan (sementara). Untuk penyimpanan permanen, diperlukan database.");
+      populateLeaderboard(); // Perbarui leaderboard setelah pemenang diubah
     }
+
+    // Fungsi inisialisasi aplikasi utama
+    async function initApp() {
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            // Autentikasi anonim atau dengan token awal jika ada
+            if (initialAuthToken) {
+                await signInWithCustomToken(auth, initialAuthToken);
+            } else {
+                await signInAnonymously(auth);
+            }
+
+            // Dapatkan userId setelah autentikasi
+            userId = auth.currentUser?.uid || crypto.randomUUID();
+
+            // Coba ambil data lomba dari Firestore
+            const lombaCollectionRef = collection(db, `artifacts/${appId}/public/data/lomba`);
+            const lombaSnapshot = await getDocs(lombaCollectionRef);
+
+            if (!lombaSnapshot.empty) {
+                lombaData = []; // Kosongkan data lokal jika ada data di Firestore
+                lombaSnapshot.forEach(doc => {
+                    lombaData.push({ id: doc.id, ...doc.data() });
+                });
+                lombaData = parseLombaDates(lombaData); // Parse tanggal setelah data dimuat
+                console.log("Data lomba dimuat dari Firestore.");
+            } else {
+                // Jika Firestore kosong, inisialisasi dengan data lokal dan unggah ke Firestore
+                console.log("Firestore kosong, menggunakan data lokal dan mengunggahnya.");
+                lombaData = parseLombaDates(lombaData); // Pastikan data lokal juga diparse tanggalnya
+                for (const lomba of lombaData) {
+                    // Pastikan id lomba unik untuk Firestore
+                    // Hapus dateObject sebelum menyimpan karena Date object tidak bisa langsung disimpan di Firestore
+                    const { dateObject, ...lombaToSave } = lomba;
+                    await setDoc(doc(db, `artifacts/${appId}/public/data/lomba`, lombaToSave.id), lombaToSave);
+                }
+            }
+
+            // Render awal semua lomba dengan pengurutan default (terlama ke terbaru)
+            sortLomba('asc', lombaData);
+            populateLeaderboard(); // Isi leaderboard
+
+        } catch (error) {
+            console.error("Error initializing Firebase or fetching data:", error);
+            // Fallback ke data lokal jika ada masalah Firebase
+            lombaData = parseLombaDates(lombaData);
+            sortLomba('asc', lombaData);
+            populateLeaderboard();
+            alert("Terjadi kesalahan saat memuat data. Menggunakan data lokal. Pastikan konfigurasi Firebase sudah benar dan aturan Firestore mengizinkan baca/tulis.");
+        }
+    }
+
+    // Panggil initApp saat halaman dimuat
+    window.onload = initApp;
 
 </script>
 <audio id="clapAudio" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_b8dd9f50a7.mp3?filename=short-applause.mp3" preload="auto"></audio>
