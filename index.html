@@ -8,7 +8,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Rubik&display=swap" rel="stylesheet">
   <style>
     body {
-      background: url('https://png.pngtree.com/png-clipart/20220627/original/pngtree-cute-kitten-seamless-pattern-png-image_8287987.png') repeat center/200px auto, linear-gradient(to bottom, #fce4ec, #ffffff);
+      /* Latar belakang sebelumnya menggunakan pola kucing, sekarang menggunakan gradien halus */
+      background: linear-gradient(to bottom, #fce4ec, #ffffff);
       font-family: 'Rubik', sans-serif;
     }
     header {
@@ -101,7 +102,14 @@
       margin-top: 3rem;
       font-size: 0.9rem;
     }
-    @media (max-width: 768px) {
+    .admin-login-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 0.8rem;
+      padding: 0.3rem 0.6rem;
+    }
+      @media (max-width: 768px) {
       header h1 {
         font-size: 2rem;
       }
@@ -123,24 +131,45 @@
       .table {
         font-size: 0.9rem;
       }
-    }
-    .text-gold {
-      color: #ff9800;
-      font-weight: bold;
-      text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+      .admin-login-btn {
+        top: 0.5rem;
+        right: 0.5rem;
+        font-size: 0.7rem;
+        padding: 0.2rem 0.4rem;
+      }
     }
   </style>
+<style>
+  .text-gold {
+    color: #ff9800;
+    font-weight: bold;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
   <header>
     <div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div><div class="ball"></div>
+    <button class="btn btn-light btn-sm admin-login-btn" onclick="showAdminLoginModal()">Login Admin</button>
     <h1>Ayo Meriahkan Lomba 17-an 2025!</h1>
     <p class="lead">Cek jadwal, lokasi, dan jenis perlombaan di lingkungan kita.</p>
     <a href="#lomba" class="btn btn-cta mt-3 shadow">Lihat Jadwal Lomba</a>
   </header>
 
-  <main class="container py-5" id="lomba">
+<main class="container py-5" id="lomba">
     <h2 class="text-center mb-4">Daftar Perlombaan Seru</h2>
+    <div class="row mb-4">
+      <div class="col-md-6 offset-md-3">
+        <div class="input-group">
+          <label class="input-group-text" for="sortOrder">Urutkan Tanggal:</label>
+          <select class="form-select" id="sortOrder" onchange="sortLomba(this.value)">
+            <option value="asc">Terlama ke Terbaru</option>
+            <option value="desc">Terbaru ke Terlama</option>
+          </select>
+        </div>
+      </div>
+    </div>
     <div class="filter-buttons">
       <button class="btn btn-outline-danger" onclick="filterKategori('Campuran Warga')">Campuran Warga</button>
       <button class="btn btn-outline-danger" onclick="filterKategori('SD, SMP-SMA')">SD, SMP-SMA</button>
@@ -150,52 +179,254 @@
       <button class="btn btn-outline-secondary" onclick="filterKategori('all')">Tampilkan Semua</button>
     </div>
     <div class="row g-4" id="daftarLomba"></div>
-  </main>
-
-  <section class="container py-5" id="leaderboard">
-    <h2 class="text-center mb-4" style="color: gold; text-shadow: 1px 1px 3px #555">🏅 Leaderboard Pemenang Terbanyak</h2>
-    <div class="table-responsive">
-      <table class="table table-bordered text-center" style="border-color: gold">
-        <thead style="background-color: gold; color: #000">
-          <tr>
-            <th>Peringkat</th>
-            <th>Nama Peserta</th>
-            <th>Jumlah Menang</th>
-          </tr>
-        </thead>
-        <tbody id="leaderboardBody">
-          <!-- Diisi dengan JS -->
-        </tbody>
-      </table>
+  <div id="pemenangModal" class="modal fade" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center bg-light border-warning border-4">
+      <div class="modal-header bg-warning text-white">
+        <h5 class="modal-title w-100" id="judulPemenang">🏆 Pemenang</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <h3 class="text-gold">🥇 Juara 1</h3>
+        <p id="juara1" class="fs-5 fw-bold"></p>
+        <h4>🥈 Juara 2</h4>
+        <p id="juara2"></p>
+        <h5>🥉 Juara 3</h5>
+        <p id="juara3"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+      </div>
     </div>
-  </section>
+  </div>
+</div>
+</main>
 
-  <footer class="footer">
+<section class="container py-5" id="leaderboard">
+  <h2 class="text-center mb-4" style="color: gold; text-shadow: 1px 1px 3px #555">🏅 Leaderboard Pemenang Terbanyak</h2>
+  <div class="table-responsive">
+    <table class="table table-bordered text-center" style="border-color: gold">
+      <thead style="background-color: gold; color: #000">
+        <tr>
+          <th>Peringkat</th>
+          <th>Nama Peserta</th>
+          <th>Jumlah Menang</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboardBody">
+        <!-- Diisi dengan JS -->
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="container py-5" id="rundown">
+  <h2 class="text-center mb-4">🗓️ Jadwal Lomba 17-an</h2>
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered">
+      <thead class="table-danger text-center">
+        <tr>
+          <th>Tanggal</th>
+          <th>Jam</th>
+          <th>Acara/Lomba</th>
+          <th>Kategori Peserta</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td rowspan="5">Sabtu, 2 Agustus 2025</td>
+          <td rowspan="5">08.00 - selesai</td>
+          <td>Memasukkan Pensil</td>
+          <td>TK - SD kelas 3, SD kelas 4 - SMP</td>
+        </tr>
+        <tr>
+          <td>Mewarnai</td>
+          <td>PAUD - SD kelas 3</td>
+        </tr>
+        <tr>
+          <td>CCA (Cerdas Cermat Agama)</td>
+          <td>SD kelas 4 - SMA</td>
+        </tr>
+        <tr>
+          <td>Lari Kelereng</td>
+          <td>SD, SMP-SMA</td>
+        </tr>
+        <tr>
+          <td>Lari Bendera</td>
+          <td>SD kelas 3</td>
+        </tr>
+        <tr>
+          <td rowspan="6">Sabtu, 9 Agustus 2025</td>
+          <td rowspan="6">08.00 - selesai</td>
+          <td>Joget Balon</td>
+          <td>Ibu-ibu</td>
+        </tr>
+        <tr>
+          <td>Estafet Sarung</td>
+          <td>Ibu-ibu</td>
+        </tr>
+        <tr>
+          <td>Balap Karung</td>
+          <td>SD, SMP-SMA</td>
+        </tr>
+        <tr>
+          <td>Pecah Air</td>
+          <td>TK - SD kelas 3, SD kelas 4 - SMP</td>
+        </tr>
+        <tr>
+          <td>Estafet Tepung</td>
+          <td>SD kelas 4 - SMA</td>
+        </tr>
+        <tr>
+          <td>Estafet Air</td>
+          <td>SD kelas 4 - SMA</td>
+        </tr>
+        <tr>
+          <td>Minggu, 10 Agustus 2025</td>
+          <td>08.00 - selesai</td>
+          <td>Volly Campuran</td>
+          <td>Campuran Warga</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Bagian baru untuk Foto 17-an -->
+<section class="container py-5 text-center" id="galeri-foto">
+  <h2 class="mb-4">📸 Galeri Foto 17-an</h2>
+  <p class="lead">Lihat keseruan momen-momen lomba dan acara 17-an tahun ini di Instagram kami!</p>
+  <a href="https://www.instagram.com/kanoman_mandira?igsh=MWw5aXFkdTZrZmNjdw==" target="_blank" class="btn btn-danger btn-lg mt-3 shadow-lg">
+    Lihat di Instagram
+  </a>
+</section>
+
+<footer class="footer">
     Website ini dibuat untuk membantu masyarakat mengetahui informasi lomba 17-an 2025.<br>
-    Hubungi panitia RT untuk info lebih lanjut. Semangat Merdeka! 🇮🇩
+    Hubungi panitia RT untuk info lebih lanjut. Semangat Merdeka! �🇩
   </footer>
 
+  <!-- Admin Login Modal -->
+<div class="modal fade" id="adminLoginModal" tabindex="-1" aria-labelledby="adminLoginModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="adminLoginModalLabel">Login Admin</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="adminUsername" class="form-label">Username</label>
+          <input type="text" class="form-control" id="adminUsername">
+        </div>
+        <div class="mb-3">
+          <label for="adminPassword" class="form-label">Password</label>
+          <input type="password" class="form-control" id="adminPassword">
+        </div>
+        <div id="loginMessage" class="text-danger"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+        <button type="button" class="btn btn-primary" onclick="performAdminLogin()">Login</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Admin Panel Modal -->
+<div class="modal fade" id="adminPanelModal" tabindex="-1" aria-labelledby="adminPanelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="adminPanelModalLabel">Panel Admin</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h4>Edit Lomba</h4>
+        <select class="form-select mb-3" id="editLombaSelect" onchange="loadLombaForEdit()">
+          <option value="">Pilih Lomba</option>
+        </select>
+        <div id="lombaEditForm" style="display: none;">
+          <input type="hidden" id="editLombaIndex">
+          <div class="mb-3">
+            <label for="editLombaNama" class="form-label">Nama Lomba</label>
+            <input type="text" class="form-control" id="editLombaNama">
+          </div>
+          <div class="mb-3">
+            <label for="editLombaKategori" class="form-label">Kategori</label>
+            <input type="text" class="form-control" id="editLombaKategori">
+          </div>
+          <div class="mb-3">
+            <label for="editLombaLokasi" class="form-label">Lokasi</label>
+            <input type="text" class="form-control" id="editLombaLokasi">
+          </div>
+          <div class="mb-3">
+            <label for="editLombaTanggal" class="form-label">Tanggal</label>
+            <input type="text" class="form-control" id="editLombaTanggal" placeholder="Contoh: 2 Agustus 2025">
+          </div>
+          <div class="mb-3">
+            <label for="editLombaKonsep" class="form-label">Konsep</label>
+            <textarea class="form-control" id="editLombaKonsep" rows="3"></textarea>
+          </div>
+          <button class="btn btn-success" onclick="saveLombaChanges()">Simpan Perubahan Lomba</button>
+        </div>
+
+        <h4 class="mt-4">Edit Pemenang Lomba</h4>
+        <select class="form-select mb-3" id="editPemenangSelect" onchange="loadPemenangForEdit()">
+          <option value="">Pilih Lomba untuk Edit Pemenang</option>
+        </select>
+        <div id="pemenangEditForm" style="display: none;">
+          <input type="hidden" id="editPemenangLombaIndex">
+          <div class="mb-3">
+            <label for="editJuara1" class="form-label">Juara 1</label>
+            <input type="text" class="form-control" id="editJuara1">
+          </div>
+          <div class="mb-3">
+            <label for="editJuara2" class="form-label">Juara 2</label>
+            <input type="text" class="form-control" id="editJuara2">
+          </div>
+          <div class="mb-3">
+            <label for="editJuara3" class="form-label">Juara 3</label>
+            <input type="text" class="form-control" id="editJuara3">
+          </div>
+          <button class="btn btn-success" onclick="savePemenangChanges()">Simpan Perubahan Pemenang</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script>
+<script>
+    // Data lomba (diperbarui untuk menyertakan pemenang dummy)
     const lombaData = [
-      { nama: "Memasukkan Pensil", kategori: "TK - SD kelas 3, SD kelas 4 - SMP", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya" },
-      { nama: "Mewarnai", kategori: "PAUD - SD kelas 3", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Gambar dari Kak Siska" },
-      { nama: "CCA (Cerdas Cermat Agama)", kategori: "SD kelas 4 - SMA", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Wajib bersuara saat menjawab" },
-      { nama: "Lari Kelereng", kategori: "SD, SMP-SMA", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya" },
-      { nama: "Lari Bendera", kategori: "SD kelas 3", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya" },
-
-      { nama: "Joget Balon", kategori: "Ibu-ibu", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya" },
-      { nama: "Estafet Sarung", kategori: "Ibu-ibu", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya" },
-      { nama: "Balap Karung", kategori: "SD, SMP-SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya" },
-      { nama: "Pecah Air", kategori: "TK - SD kelas 3, SD kelas 4 - SMP", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya" },
-      { nama: "Estafet Tepung", kategori: "SD kelas 4 - SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Menggunakan kartu remi" },
-      { nama: "Estafet Air", kategori: "SD kelas 4 - SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Gelas plastik di tali di atas kepala" },
-
-      { nama: "Volly Campuran", kategori: "Campuran Warga", lokasi: "Lapangan Voli", tanggal: "10 Agustus 2025", konsep: "4 Tim warga, sistem gugur, semifinal dan final, max 2 orang per KK" }
+      { nama: "Memasukkan Pensil", kategori: "TK - SD kelas 3, SD kelas 4 - SMP", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Budi', juara2: 'Santi', juara3: 'Agus'} },
+      { nama: "Mewarnai", kategori: "PAUD - SD kelas 3", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Gambar dari Kak Siska", pemenang: {juara1: 'Citra', juara2: 'Dedi', juara3: 'Eka'} },
+      { nama: "CCA (Cerdas Cermat Agama)", kategori: "SD kelas 4 - SMA", lokasi: "Rumah Bpk Purwanto", tanggal: "2 Agustus 2025", konsep: "Wajib bersuara saat menjawab", pemenang: {juara1: 'Fajar', juara2: 'Gita', juara3: 'Hadi'} },
+      { nama: "Lari Kelereng", kategori: "SD, SMP-SMA", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Indra', juara2: 'Joko', juara3: 'Kartika'} },
+      { nama: "Lari Bendera", kategori: "SD kelas 3", lokasi: "Lapangan Voli", tanggal: "2 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Lina', juara2: 'Mira', juara3: 'Nia'} },
+      { nama: "Joget Balon", kategori: "Ibu-ibu", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Bu Ani', juara2: 'Bu Beta', juara3: 'Bu Citra'} },
+      { nama: "Estafet Sarung", kategori: "Ibu-ibu", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Bu Dewi', juara2: 'Bu Ela', juara3: 'Bu Fani'} },
+      { nama: "Balap Karung", kategori: "SD, SMP-SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Gilang', juara2: 'Hasan', juara3: 'Irfan'} },
+      { nama: "Pecah Air", kategori: "TK - SD kelas 3, SD kelas 4 - SMP", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Jihan', juara2: 'Kevin', juara3: 'Laras'} },
+      { nama: "Estafet Tepung", kategori: "SD kelas 4 - SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Menggunakan kartu remi", pemenang: {juara1: 'Maya', juara2: 'Nanda', juara3: 'Oscar'} },
+      { nama: "Estafet Air", kategori: "SD kelas 4 - SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Gelas plastik ditali di atas kepala", pemenang: {juara1: 'Putri', juara2: 'Rian', juara3: 'Sinta'} },
+      { nama: "Volly Campuran", kategori: "Campuran Warga", lokasi: "Lapangan Voli", tanggal: "10 Agustus 2025", konsep: "4 Tim warga, sistem gugur, semifinal dan final, max 2 orang per KK", pemenang: {juara1: 'Tim A', juara2: 'Tim B', juara3: 'Tim C'} }
     ];
 
+    // Mengonversi string tanggal menjadi objek Date untuk mempermudah pengurutan
+    lombaData.forEach(lomba => {
+        // Mengganti "Agustus" dengan "August" agar Date() bisa mengurai dengan benar
+        const dateString = lomba.tanggal.replace('Agustus', 'August');
+        lomba.dateObject = new Date(dateString);
+    });
+
     const container = document.getElementById('daftarLomba');
+    let currentFilteredData = [...lombaData]; // Menyimpan data yang sedang difilter
 
     function renderLomba(data) {
       container.innerHTML = '';
@@ -209,6 +440,9 @@
                 <p><strong>📍 Lokasi:</strong> ${lomba.lokasi}</p>
                 <p><strong>📅 Tanggal:</strong> ${lomba.tanggal}</p>
                 <p><strong>📋 Konsep:</strong> ${lomba.konsep}</p>
+                <div class="d-flex justify-content-start mt-3">
+                  <button class="btn btn-warning" onclick="showPemenang('${lomba.nama}')">🎉 Lihat Pemenang</button>
+                </div>
               </div>
             </div>
           </div>
@@ -218,13 +452,53 @@
 
     function filterKategori(kategori) {
       if (kategori === 'all') {
-        renderLomba(lombaData);
+        currentFilteredData = [...lombaData];
       } else {
-        const filtered = lombaData.filter(l => l.kategori === kategori);
-        renderLomba(filtered);
+        currentFilteredData = lombaData.filter(l => l.kategori === kategori);
       }
+      // Setelah filter, terapkan pengurutan yang sedang aktif
+      const currentSortOrder = document.getElementById('sortOrder').value;
+      sortLomba(currentSortOrder, currentFilteredData);
     }
 
+    function sortLomba(order, dataToSort = currentFilteredData) {
+        if (order === 'asc') {
+            dataToSort.sort((a, b) => a.dateObject - b.dateObject);
+        } else { // desc
+            dataToSort.sort((a, b) => b.dateObject - a.dateObject);
+        }
+        renderLomba(dataToSort);
+    }
+
+    // Render awal semua lomba dengan pengurutan default (terlama ke terbaru)
+    sortLomba('asc', lombaData);
+
+    // Fungsi untuk menampilkan modal pemenang
+    function showPemenang(namaLomba) {
+      const lomba = lombaData.find(l => l.nama === namaLomba);
+      const modal = new bootstrap.Modal(document.getElementById('pemenangModal'));
+      document.getElementById('judulPemenang').innerText = `🏆 Pemenang ${namaLomba}`;
+
+      if (lomba && lomba.pemenang) {
+        document.getElementById('juara1').innerText = lomba.pemenang.juara1 || 'Belum ada';
+        document.getElementById('juara2').innerText = lomba.pemenang.juara2 || 'Belum ada';
+        document.getElementById('juara3').innerText = lomba.pemenang.juara3 || 'Belum ada';
+      } else {
+        document.getElementById('juara1').innerText = 'Belum ada';
+        document.getElementById('juara2').innerText = 'Belum ada';
+        document.getElementById('juara3').innerText = 'Belum ada';
+      }
+
+      confetti({
+        particleCount: 200,
+        spread: 100,
+        origin: { y: 0.6 }
+      });
+      document.getElementById('clapAudio').play();
+      modal.show();
+    }
+
+    // Dummy data leaderboard
     const leaderboardData = [
       { nama: 'Saya orang PALING KEREN SUPER DUPER SIGMA', menang: 5 },
       { nama: 'Saya orang PALING KEREN', menang: 3 },
@@ -242,7 +516,161 @@
       `;
     });
 
-    renderLomba(lombaData);
-  </script>
+    const clapAudio = document.getElementById('clapAudio');
+    // Memuat audio setelah halaman dimuat untuk menghindari masalah autoplay
+    window.addEventListener('load', () => {
+        if (clapAudio) {
+            clapAudio.load();
+        }
+    });
+
+    // --- Fitur Admin Login dan Edit ---
+    let isAdminLoggedIn = false; // Flag status login admin
+
+    function showAdminLoginModal() {
+      const adminLoginModal = new bootstrap.Modal(document.getElementById('adminLoginModal'));
+      document.getElementById('adminUsername').value = '';
+      document.getElementById('adminPassword').value = '';
+      document.getElementById('loginMessage').innerText = '';
+      adminLoginModal.show();
+    }
+
+    function performAdminLogin() {
+      const username = document.getElementById('adminUsername').value;
+      const password = document.getElementById('adminPassword').value;
+      const loginMessage = document.getElementById('loginMessage');
+
+      // Kredensial login dummy (ganti dengan autentikasi yang aman di produksi)
+      if (username === 'admin' && password === 'admin123') {
+        isAdminLoggedIn = true;
+        loginMessage.innerText = '';
+        const adminLoginModal = bootstrap.Modal.getInstance(document.getElementById('adminLoginModal'));
+        adminLoginModal.hide();
+        showAdminPanel();
+      } else {
+        loginMessage.innerText = 'Username atau password salah.';
+      }
+    }
+
+    function showAdminPanel() {
+      if (!isAdminLoggedIn) {
+        showAdminLoginModal();
+        return;
+      }
+      const adminPanelModal = new bootstrap.Modal(document.getElementById('adminPanelModal'));
+      populateAdminLombaSelect();
+      populateAdminPemenangSelect();
+      adminPanelModal.show();
+    }
+
+    function populateAdminLombaSelect() {
+      const select = document.getElementById('editLombaSelect');
+      select.innerHTML = '<option value="">Pilih Lomba</option>';
+      lombaData.forEach((lomba, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.innerText = lomba.nama;
+        select.appendChild(option);
+      });
+      document.getElementById('lombaEditForm').style.display = 'none';
+    }
+
+    function loadLombaForEdit() {
+      const select = document.getElementById('editLombaSelect');
+      const index = select.value;
+      const form = document.getElementById('lombaEditForm');
+
+      if (index === "") {
+        form.style.display = 'none';
+        return;
+      }
+
+      form.style.display = 'block';
+      const lomba = lombaData[parseInt(index)];
+      document.getElementById('editLombaIndex').value = index;
+      document.getElementById('editLombaNama').value = lomba.nama;
+      document.getElementById('editLombaKategori').value = lomba.kategori;
+      document.getElementById('editLombaLokasi').value = lomba.lokasi;
+      document.getElementById('editLombaTanggal').value = lomba.tanggal;
+      document.getElementById('editLombaKonsep').value = lomba.konsep;
+    }
+
+    function saveLombaChanges() {
+      const index = parseInt(document.getElementById('editLombaIndex').value);
+      if (isNaN(index) || index < 0 || index >= lombaData.length) {
+        console.error("Indeks lomba tidak valid.");
+        return;
+      }
+
+      lombaData[index].nama = document.getElementById('editLombaNama').value;
+      lombaData[index].kategori = document.getElementById('editLombaKategori').value;
+      lombaData[index].lokasi = document.getElementById('editLombaLokasi').value;
+      lombaData[index].tanggal = document.getElementById('editLombaTanggal').value;
+      lombaData[index].konsep = document.getElementById('editLombaKonsep').value;
+
+      // Perbarui dateObject setelah mengubah string tanggal
+      const dateString = lombaData[index].tanggal.replace('Agustus', 'August');
+      lombaData[index].dateObject = new Date(dateString);
+
+      renderLomba(currentFilteredData); // Render ulang daftar yang ditampilkan
+      populateAdminLombaSelect(); // Perbarui dropdown pilihan lomba
+      alert("Perubahan lomba berhasil disimpan (sementara). Untuk penyimpanan permanen, diperlukan database.");
+    }
+
+    function populateAdminPemenangSelect() {
+      const select = document.getElementById('editPemenangSelect');
+      select.innerHTML = '<option value="">Pilih Lomba untuk Edit Pemenang</option>';
+      lombaData.forEach((lomba, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.innerText = lomba.nama;
+        select.appendChild(option);
+      });
+      document.getElementById('pemenangEditForm').style.display = 'none';
+    }
+
+    function loadPemenangForEdit() {
+      const select = document.getElementById('editPemenangSelect');
+      const index = select.value;
+      const form = document.getElementById('pemenangEditForm');
+
+      if (index === "") {
+        form.style.display = 'none';
+        return;
+      }
+
+      form.style.display = 'block';
+      const lomba = lombaData[parseInt(index)];
+      document.getElementById('editPemenangLombaIndex').value = index;
+      document.getElementById('editJuara1').value = lomba.pemenang ? lomba.pemenang.juara1 || '' : '';
+      document.getElementById('editJuara2').value = lomba.pemenang ? lomba.pemenang.juara2 || '' : '';
+      document.getElementById('editJuara3').value = lomba.pemenang ? lomba.pemenang.juara3 || '' : '';
+    }
+
+    function savePemenangChanges() {
+      const index = parseInt(document.getElementById('editPemenangLombaIndex').value);
+      if (isNaN(index) || index < 0 || index >= lombaData.length) {
+        console.error("Indeks lomba tidak valid.");
+        return;
+      }
+
+      if (!lombaData[index].pemenang) {
+          lombaData[index].pemenang = {}; // Inisialisasi jika belum ada
+      }
+      lombaData[index].pemenang.juara1 = document.getElementById('editJuara1').value;
+      lombaData[index].pemenang.juara2 = document.getElementById('editJuara2').value;
+      lombaData[index].pemenang.juara3 = document.getElementById('editJuara3').value;
+
+      // Perbarui tampilan modal pemenang jika sedang terbuka untuk lomba ini
+      const currentModalLombaName = document.getElementById('judulPemenang').innerText.replace('🏆 Pemenang ', '');
+      if (currentModalLombaName === lombaData[index].nama) {
+          showPemenang(lombaData[index].nama); // Panggil ulang untuk memperbarui tampilan
+      }
+      alert("Perubahan pemenang berhasil disimpan (sementara). Untuk penyimpanan permanen, diperlukan database.");
+    }
+
+</script>
+<audio id="clapAudio" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_b8dd9f50a7.mp3?filename=short-applause.mp3" preload="auto"></audio>
 </body>
 </html>
+�
