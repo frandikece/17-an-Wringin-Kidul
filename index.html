@@ -215,6 +215,7 @@
       <tbody id="leaderboardBody">
         <!-- Diisi dengan JS -->
       </tbody>
+
     </table>
   </div>
 </section>
@@ -399,7 +400,7 @@
 </div>
 
 
-  <script type="module">
+  <script>
     // Firebase SDK Imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -419,7 +420,8 @@
       appId: "1:720251123371:web:49e07b31156ad2a66fe9ee",
       measurementId: "G-JJRVH8879P"
     };
-    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+    // initialAuthToken tidak lagi diperlukan karena kita menghapus type="module"
+    // const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
     // Inisialisasi Firebase
     let app;
@@ -563,7 +565,7 @@
         const winnerCounts = {};
         lombaData.forEach(lomba => {
             if (lomba.pemenang && lomba.pemenang.juara1) {
-                winnerCounts[lomba.pemenang.juara1] = (winnerCounts[lomba.pemenang.juara1] || 0) + 1;
+                winnerCounts[lomba.pemenang.juara1] = (winnerCounts[lomba.pemenang.juera1] || 0) + 1;
             }
             // Anda bisa menambahkan logika untuk juara 2 dan 3 jika ingin mereka juga berkontribusi pada leaderboard
         });
@@ -795,13 +797,10 @@
 
             // PASTIKAN Firebase Authentication diaktifkan di konsol Firebase Anda!
             // Metode login anonim atau dengan token awal
-            if (initialAuthToken) {
-                await signInWithCustomToken(auth, initialAuthToken);
-                console.log("Autentikasi dengan token awal.");
-            } else {
-                await signInAnonymously(auth);
-                console.log("Autentikasi anonim.");
-            }
+            // initialAuthToken tidak lagi diperlukan karena kita menghapus type="module"
+            await signInAnonymously(auth);
+            console.log("Autentikasi anonim.");
+            
 
             // Dapatkan userId setelah autentikasi
             userId = auth.currentUser?.uid || crypto.randomUUID();
@@ -854,4 +853,19 @@
               { id: 'lomba9', nama: "Pecah Air", kategori: "TK - SD kelas 3, SD kelas 4 - SMP", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Sama seperti tahun sebelumnya", pemenang: {juara1: 'Jihan', juara2: 'Kevin', juara3: 'Laras'} },
               { id: 'lomba10', nama: "Estafet Tepung", kategori: "SD kelas 4 - SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Menggunakan kartu remi", pemenang: {juara1: 'Maya', juara2: 'Nanda', juara3: 'Oscar'} },
               { id: 'lomba11', nama: "Estafet Air", kategori: "SD kelas 4 - SMA", lokasi: "Lapangan Voli", tanggal: "9 Agustus 2025", konsep: "Gelas plastik ditali di atas kepala", pemenang: {juara1: 'Putri', juara2: 'Rian', juara3: 'Sinta'} },
-              { id: 'lomba12', nama: "Volly Campuran", kategori: "Campuran Warga", lokasi: "Lapangan Voli", tanggal: "10 Agustus 2025", konsep: "4 Tim war
+              { id: 'lomba12', nama: "Volly Campuran", kategori: "Campuran Warga", lokasi: "Lapangan Voli", tanggal: "10 Agustus 2025", konsep: "4 Tim warga, sistem gugur, semifinal dan final, max 2 orang per KK", pemenang: {juara1: 'Tim A', juara2: 'Tim B', juara3: 'Tim C'} }
+            ];
+            sortLomba('asc', lombaData);
+            populateLeaderboard();
+            alert("Terjadi kesalahan saat memuat data. Menggunakan data lokal. Pastikan konfigurasi Firebase sudah benar dan aturan Firestore mengizinkan baca/tulis. Juga pastikan Firebase Authentication diaktifkan.");
+            console.error("initApp gagal. Menggunakan data lokal."); // LOGGING: initApp gagal
+        }
+    }
+
+    // Panggil initApp saat halaman dimuat
+    window.onload = initApp;
+
+</script>
+<audio id="clapAudio" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_b8dd9f50a7.mp3?filename=short-applause.mp3" preload="auto"></audio>
+</body>
+</html>
